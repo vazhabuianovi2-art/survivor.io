@@ -16,6 +16,9 @@ namespace SurvivorIO
         [SerializeField] private float contactDamage = 8f;
         [SerializeField] private SpriteRenderer spriteToFlip;
 
+        [Header("Drops")]
+        [SerializeField] private GameObject xpGemPrefab;
+
         /// <summary>Damage this enemy deals to the player on contact (used in stage 5).</summary>
         public float ContactDamage => contactDamage;
 
@@ -84,7 +87,8 @@ namespace SurvivorIO
         private void HandleDied(Health h)
         {
             KillCount++;
-            // TODO stage 4: spawn an XP gem at transform.position here.
+            if (xpGemPrefab != null)
+                Instantiate(xpGemPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

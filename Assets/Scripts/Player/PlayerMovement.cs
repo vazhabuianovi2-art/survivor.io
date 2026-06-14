@@ -63,5 +63,8 @@ namespace SurvivorIO
         {
             _rb.linearVelocity = _input * moveSpeed;
         }
+
+        /// <summary>Used by level-up skills to boost movement speed.</summary>
+        public void UpgradeMoveSpeed(float multiplier) => moveSpeed *= multiplier;
     }
 }

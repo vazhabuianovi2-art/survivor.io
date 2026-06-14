@@ -21,6 +21,8 @@ public static class PlaceholderSpriteGen
         CreateCircle(dir, "enemy", size, new Color(0.85f, 0.22f, 0.22f), new Color(0.35f, 0.05f, 0.05f));
         // projectile placeholder (bright yellow)
         CreateCircle(dir, "bullet", size, new Color(1f, 0.9f, 0.3f), new Color(0.85f, 0.55f, 0.1f));
+        // XP gem placeholder (green, like survivor.io gems)
+        CreateCircle(dir, "gem", size, new Color(0.3f, 0.95f, 0.45f), new Color(0.06f, 0.4f, 0.18f));
         // tiling ground grid so player movement is visible
         CreateGridTile(dir, "grid", size, new Color(0.34f, 0.34f, 0.40f), new Color(0.28f, 0.28f, 0.34f));
         // hollow ring for the joystick background (survivor.io style outer ring)
