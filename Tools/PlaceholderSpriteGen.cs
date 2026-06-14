@@ -17,6 +17,8 @@ public static class PlaceholderSpriteGen
         CreateCircle(dir, "player", size, new Color(0.20f, 0.45f, 1f), new Color(0.05f, 0.12f, 0.35f));
         // plain white circle for UI tinting (joystick bg/handle, etc.)
         CreateCircle(dir, "uicircle", size, Color.white, new Color(1f, 1f, 1f, 0f));
+        // enemy placeholder (red) so it reads clearly against the blue player
+        CreateCircle(dir, "enemy", size, new Color(0.85f, 0.22f, 0.22f), new Color(0.35f, 0.05f, 0.05f));
         // tiling ground grid so player movement is visible
         CreateGridTile(dir, "grid", size, new Color(0.34f, 0.34f, 0.40f), new Color(0.28f, 0.28f, 0.34f));
         // hollow ring for the joystick background (survivor.io style outer ring)
