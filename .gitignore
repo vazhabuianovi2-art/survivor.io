@@ -60,3 +60,6 @@ Thumbs.db
 # Gradle cache
 .gradle/
 *.slnx
+
+# Coplay plugin local data (the plugin itself is referenced from Packages/manifest.json)
+Packages/Coplay/
