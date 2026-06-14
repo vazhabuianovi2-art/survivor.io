@@ -151,6 +151,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 5677511940065634220, guid: 867406d825d41444d88f45fe23de250f, type: 3}
   target: {fileID: 1107126606}
   spawnRadius: 10
+  spawnMargin: 2
   startInterval: 1.5
   minInterval: 0.25
   rampDuration: 120
@@ -234,7 +235,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -786,6 +787,7 @@ GameObject:
   - component: {fileID: 1107126604}
   - component: {fileID: 1107126603}
   - component: {fileID: 1107126602}
+  - component: {fileID: 1107126607}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -945,6 +947,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1107126607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107126601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff6bc5f6b4ba1b43b99eeb6499fbc78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.AutoAttackWeapon
+  projectilePrefab: {fileID: 2762101308843041905, guid: 5f261e14dd7f7a94ab172cee539fd90f, type: 3}
+  firePoint: {fileID: 0}
+  fireInterval: 0.4
+  range: 7
+  projectileSpeed: 12
+  damage: 1
+  projectileLifetime: 2
+  pierce: 0
 --- !u!1 &1793181584
 GameObject:
   m_ObjectHideFlags: 0

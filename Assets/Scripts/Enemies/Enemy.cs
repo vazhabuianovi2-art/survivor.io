@@ -22,6 +22,16 @@ namespace SurvivorIO
         /// <summary>Number of enemies currently alive — used by the spawner to cap counts.</summary>
         public static int AliveCount { get; private set; }
 
+        /// <summary>Total enemies killed this run (drives the kill counter UI in stage 5).</summary>
+        public static int KillCount { get; private set; }
+
+        /// <summary>Reset run-scoped counters (call when a new run starts).</summary>
+        public static void ResetCounters()
+        {
+            AliveCount = 0;
+            KillCount = 0;
+        }
+
         private Rigidbody2D _rb;
         private Health _health;
         private Transform _target;
@@ -73,6 +83,7 @@ namespace SurvivorIO
 
         private void HandleDied(Health h)
         {
+            KillCount++;
             // TODO stage 4: spawn an XP gem at transform.position here.
             Destroy(gameObject);
         }
