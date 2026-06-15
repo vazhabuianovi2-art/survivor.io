@@ -17,6 +17,8 @@ namespace SurvivorIO
         [SerializeField] private SpriteRenderer spriteToFlip;
         [Tooltip("Rigged-character visual root flipped via localScale.x (preferred over spriteToFlip).")]
         [SerializeField] private Transform visualToFlip;
+        [Tooltip("Animator on the character rig — speed=1 when moving, speed=0 when idle.")]
+        [SerializeField] private Animator characterAnimator;
 
         private Rigidbody2D _rb;
         private Vector2 _input;
@@ -55,6 +57,10 @@ namespace SurvivorIO
                     spriteToFlip.flipX = _input.x < 0f;
                 }
             }
+
+            // Drive walk animation: play when moving, freeze when idle.
+            if (characterAnimator != null)
+                characterAnimator.speed = _input.sqrMagnitude > 0.01f ? 1f : 0f;
         }
 
         private static Vector2 ReadKeyboard()
