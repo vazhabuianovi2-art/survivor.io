@@ -193,6 +193,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 874208212150733169, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8365563
+      objectReference: {fileID: 0}
+    - target: {fileID: 874208212150733169, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 874208212150733169, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 874208212150733169, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.54788107
+      objectReference: {fileID: 0}
+    - target: {fileID: 874208212150733169, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 66.444
+      objectReference: {fileID: 0}
     - target: {fileID: 1468822264502255260, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Color.b
       value: 0.3
@@ -233,6 +253,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 2673054915886023775, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.23131673
+      objectReference: {fileID: 0}
+    - target: {fileID: 2673054915886023775, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05126169
+      objectReference: {fileID: 0}
     - target: {fileID: 3321701691374741295, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Color.b
       value: 0.3
@@ -244,6 +272,22 @@ PrefabInstance:
     - target: {fileID: 3321701691374741295, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Color.r
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292226484577777139, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.14610331
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292226484577777139, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292226484577777139, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.9892694
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292226484577777139, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 196.802
       objectReference: {fileID: 0}
     - target: {fileID: 4463068285201171721, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Color.b
@@ -280,6 +324,26 @@ PrefabInstance:
     - target: {fileID: 5313633109693225087, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Color.r
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391741594257012220, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99521035
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391741594257012220, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391741594257012220, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391741594257012220, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.09775698
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391741594257012220, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -11.22
       objectReference: {fileID: 0}
     - target: {fileID: 6147544752401771470, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Color.b

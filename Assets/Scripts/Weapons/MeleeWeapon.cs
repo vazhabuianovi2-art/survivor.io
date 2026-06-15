@@ -105,6 +105,8 @@ namespace SurvivorIO
             return nearest;
         }
 
+        public float CooldownProgress => _attacking ? 1f : Mathf.Clamp01(_timer / cooldown);
+
         public void UpgradeDamage(float mult) => damage *= mult;
         public void UpgradeRange(float mult) => range *= mult;
         public void UpgradeCooldown(float mult) => cooldown *= mult;

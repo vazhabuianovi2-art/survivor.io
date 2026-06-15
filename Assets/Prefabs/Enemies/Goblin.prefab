@@ -221,6 +221,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 8.695
       objectReference: {fileID: 0}
+    - target: {fileID: 1308948549267672553, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9271461
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308948549267672553, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308948549267672553, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.37470022
+      objectReference: {fileID: 0}
+    - target: {fileID: 1308948549267672553, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 44.012
+      objectReference: {fileID: 0}
     - target: {fileID: 1505905564021469714, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_Name
       value: Goblin_Thief
@@ -331,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6149400311412050378, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.790594
+      value: 0.69396955
       objectReference: {fileID: 0}
     - target: {fileID: 6149400311412050378, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_LocalRotation.x
@@ -343,11 +359,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6149400311412050378, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.6123406
+      value: 0.7200043
       objectReference: {fileID: 0}
     - target: {fileID: 6149400311412050378, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 75.518
+      value: 92.11
       objectReference: {fileID: 0}
     - target: {fileID: 6307779078264607102, guid: fe9f6acd2d5879a45897a3c86a4a5a2d, type: 3}
       propertyPath: m_LocalRotation.w
