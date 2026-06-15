@@ -20,6 +20,12 @@ namespace SurvivorIO
 
         [Header("Drops")]
         [SerializeField] private GameObject xpGemPrefab;
+        [SerializeField] private int xpGemCount = 1;
+
+        [Header("Scaling (set by WaveManager at runtime)")]
+        [SerializeField] private float healthMultiplier = 1f;
+        [SerializeField] private float damageMultiplier = 1f;
+        [SerializeField] private float speedMultiplier = 1f;
 
         /// <summary>Damage this enemy deals to the player on contact (used in stage 5).</summary>
         public float ContactDamage => contactDamage;
@@ -49,6 +55,12 @@ namespace SurvivorIO
             _health = GetComponent<Health>();
             if (spriteToFlip == null)
                 spriteToFlip = GetComponentInChildren<SpriteRenderer>();
+
+            // Apply stat multipliers
+            if (healthMultiplier != 1f)
+                _health.SetMaxHealth(_health.Max * healthMultiplier);
+            moveSpeed *= speedMultiplier;
+            contactDamage *= damageMultiplier;
         }
 
         private void OnEnable()
@@ -102,7 +114,13 @@ namespace SurvivorIO
         {
             KillCount++;
             if (xpGemPrefab != null)
-                Instantiate(xpGemPrefab, transform.position, Quaternion.identity);
+            {
+                for (int i = 0; i < xpGemCount; i++)
+                {
+                    var offset = Random.insideUnitCircle * 0.3f;
+                    Instantiate(xpGemPrefab, transform.position + (Vector3)offset, Quaternion.identity);
+                }
+            }
             Destroy(gameObject);
         }
     }

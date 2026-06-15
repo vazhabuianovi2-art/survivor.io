@@ -98,27 +98,34 @@ namespace SurvivorIO
 
         private void BuildSkillList(GameObject player)
         {
-            var weapon = player.GetComponent<AutoAttackWeapon>();
+            var ranged   = player.GetComponent<AutoAttackWeapon>();
+            var melee    = player.GetComponent<MeleeWeapon>();
             var movement = player.GetComponent<PlayerMovement>();
+            var health   = player.GetComponent<PlayerHealthController>();
 
-            if (weapon != null)
+            // Melee weapon skills (when MeleeWeapon is present and enabled)
+            if (melee != null && melee.enabled)
             {
-                _allSkills.Add(new Skill("Sharp Rounds", "+1 projectile damage",
-                    () => weapon.UpgradeDamage(1f)));
-                _allSkills.Add(new Skill("Rapid Fire", "+25% attack speed",
-                    () => weapon.UpgradeFireRate(0.8f)));
-                _allSkills.Add(new Skill("Long Shot", "+2 attack range",
-                    () => weapon.UpgradeRange(2f)));
-                _allSkills.Add(new Skill("Piercing", "Projectiles pierce +1 enemy",
-                    () => weapon.UpgradePierce(1)));
-                _allSkills.Add(new Skill("Multi Shot", "+1 projectile per volley",
-                    () => weapon.UpgradeProjectileCount(1)));
+                _allSkills.Add(new Skill("Sword Mastery",   "+25% sword damage",   () => melee.UpgradeDamage(1.25f)));
+                _allSkills.Add(new Skill("Wider Slash",     "+20% swing range",    () => melee.UpgradeRange(1.2f)));
+                _allSkills.Add(new Skill("Swift Blade",     "+20% attack speed",   () => melee.UpgradeCooldown(0.8f)));
+                _allSkills.Add(new Skill("Blood Rush",      "+30% sword damage",   () => melee.UpgradeDamage(1.3f)));
+                _allSkills.Add(new Skill("Berserker",       "+25% swing range",    () => melee.UpgradeRange(1.25f)));
             }
+            else if (ranged != null)
+            {
+                _allSkills.Add(new Skill("Sharp Rounds", "+1 projectile damage",   () => ranged.UpgradeDamage(1f)));
+                _allSkills.Add(new Skill("Rapid Fire",   "+25% attack speed",      () => ranged.UpgradeFireRate(0.8f)));
+                _allSkills.Add(new Skill("Long Shot",    "+2 attack range",         () => ranged.UpgradeRange(2f)));
+                _allSkills.Add(new Skill("Piercing",     "Projectiles pierce +1",  () => ranged.UpgradePierce(1)));
+                _allSkills.Add(new Skill("Multi Shot",   "+1 projectile per volley",() => ranged.UpgradeProjectileCount(1)));
+            }
+
+            // Universal skills
             if (movement != null)
-            {
-                _allSkills.Add(new Skill("Swift Feet", "+15% movement speed",
-                    () => movement.UpgradeMoveSpeed(1.15f)));
-            }
+                _allSkills.Add(new Skill("Swift Feet", "+15% movement speed", () => movement.UpgradeMoveSpeed(1.15f)));
+            if (health != null)
+                _allSkills.Add(new Skill("Iron Body", "+25 max HP", () => health.UpgradeMaxHealth(25f)));
         }
 
         // ---------- UI construction ----------

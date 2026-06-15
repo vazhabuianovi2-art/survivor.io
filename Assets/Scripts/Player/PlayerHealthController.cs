@@ -59,5 +59,10 @@ namespace SurvivorIO
             if (GameManager.Instance != null)
                 GameManager.Instance.TriggerGameOver();
         }
+
+        public void UpgradeMaxHealth(float amount)
+        {
+            _health.SetMaxHealth(_health.Max + amount);
+        }
     }
 }

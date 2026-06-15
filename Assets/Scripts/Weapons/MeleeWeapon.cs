@@ -40,7 +40,7 @@ namespace SurvivorIO
 
         private void Update()
         {
-            if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
+            if (GameManager.Instance != null && (GameManager.Instance.IsGameOver || GameManager.Instance.IsGameWon)) return;
 
             _timer += Time.deltaTime;
 

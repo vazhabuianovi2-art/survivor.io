@@ -4,20 +4,16 @@ using UnityEngine.SceneManagement;
 
 namespace SurvivorIO
 {
-    /// <summary>
-    /// Owns run-level state: survival time and the game-over flow. Resets the
-    /// run-scoped enemy counters on start and restores the timescale (in case a
-    /// previous run left it paused).
-    /// </summary>
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
 
         public float ElapsedTime { get; private set; }
         public bool IsGameOver { get; private set; }
+        public bool IsGameWon { get; private set; }
 
-        /// <summary>Raised once when the player dies.</summary>
         public event Action GameOver;
+        public event Action GameWon;
 
         private void Awake()
         {
@@ -28,16 +24,30 @@ namespace SurvivorIO
 
         private void Update()
         {
-            if (!IsGameOver)
+            if (!IsGameOver && !IsGameWon)
                 ElapsedTime += Time.deltaTime;
+
+#if UNITY_EDITOR
+            // Debug shortcuts
+            if (UnityEngine.InputSystem.Keyboard.current?.f1Key.wasPressedThisFrame == true)
+                TriggerWin();
+#endif
         }
 
         public void TriggerGameOver()
         {
-            if (IsGameOver) return;
+            if (IsGameOver || IsGameWon) return;
             IsGameOver = true;
             Time.timeScale = 0f;
             GameOver?.Invoke();
+        }
+
+        public void TriggerWin()
+        {
+            if (IsGameOver || IsGameWon) return;
+            IsGameWon = true;
+            Time.timeScale = 0f;
+            GameWon?.Invoke();
         }
 
         public void Retry()
