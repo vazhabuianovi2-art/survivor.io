@@ -1,117 +1,109 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SurvivorIO
 {
-    /// <summary>
-    /// Melee sword weapon. When present on the Player it disables the ranged
-    /// AutoAttackWeapon and instead swings the sword pivot every <see cref="cooldown"/>
-    /// seconds whenever an enemy is within <see cref="range"/>. Enemies inside the
-    /// overlap circle at the mid-point of the swing take <see cref="damage"/>.
-    /// </summary>
     public class MeleeWeapon : MonoBehaviour
     {
         [Header("Stats")]
         [SerializeField] private float damage = 25f;
-        [SerializeField] private float range = 1.8f;
+        [SerializeField] private float range = 5f;
         [SerializeField] private float cooldown = 0.7f;
 
-        [Header("Visual swing")]
+        [Header("Sword hold")]
         [SerializeField] private Transform swordPivot;
-        [SerializeField] private float swingDuration = 0.22f;
-        [SerializeField] private float swingStartAngle = 50f;
-        [SerializeField] private float swingEndAngle = -80f;
+        [SerializeField] private float restAngle = -30f;
 
-        private AutoAttackWeapon _ranged;
+        [Header("Slash projectile")]
+        [SerializeField] private GameObject slashPrefab;
+        [SerializeField] private float slashDuration = 0.18f;
+
         private float _timer;
-        private bool _swinging;
-        private float _swingTimer;
-        private bool _damageApplied;
+        private bool _attacking;
+        private float _attackTimer;
+        private bool _slashFired;
+        private Vector2 _attackDir;
+
         private readonly Collider2D[] _buffer = new Collider2D[24];
-        private readonly HashSet<Health> _hitThisSwing = new HashSet<Health>();
 
         private void Awake()
         {
-            _ranged = GetComponent<AutoAttackWeapon>();
-            if (_ranged != null) _ranged.enabled = false;
+            var ranged = GetComponent<AutoAttackWeapon>();
+            if (ranged != null) ranged.enabled = false;
 
-            _timer = cooldown; // ready immediately
+            _timer = cooldown;
+            if (swordPivot != null)
+                swordPivot.localEulerAngles = new Vector3(0f, 0f, restAngle);
         }
 
         private void Update()
         {
-            if (GameManager.Instance != null && (GameManager.Instance.IsGameOver || GameManager.Instance.IsGameWon)) return;
+            if (GameManager.Instance != null && (GameManager.Instance.IsGameOver || GameManager.Instance.IsGameWon))
+                return;
+
+            if (_attacking)
+            {
+                _attackTimer += Time.deltaTime;
+                float t = Mathf.Clamp01(_attackTimer / slashDuration);
+
+                if (swordPivot != null)
+                {
+                    float angle = t < 0.5f
+                        ? Mathf.Lerp(restAngle, restAngle + 60f, t * 2f)
+                        : Mathf.Lerp(restAngle + 60f, restAngle, (t - 0.5f) * 2f);
+                    swordPivot.localEulerAngles = new Vector3(0f, 0f, angle);
+                }
+
+                if (!_slashFired && t >= 0.5f)
+                {
+                    _slashFired = true;
+                    SpawnSlash();
+                }
+
+                if (t >= 1f)
+                {
+                    _attacking = false;
+                    if (swordPivot != null)
+                        swordPivot.localEulerAngles = new Vector3(0f, 0f, restAngle);
+                }
+                return;
+            }
 
             _timer += Time.deltaTime;
-
-            if (!_swinging && _timer >= cooldown && HasNearbyEnemy())
+            if (_timer >= cooldown)
             {
-                _timer = 0f;
-                BeginSwing();
-            }
-
-            if (_swinging)
-                TickSwing();
-        }
-
-        // ── swing animation ───────────────────────────────────────────────
-
-        private void BeginSwing()
-        {
-            _swinging = true;
-            _swingTimer = 0f;
-            _damageApplied = false;
-            _hitThisSwing.Clear();
-        }
-
-        private void TickSwing()
-        {
-            _swingTimer += Time.deltaTime;
-            float t = Mathf.Clamp01(_swingTimer / swingDuration);
-
-            if (swordPivot != null)
-            {
-                float angle = Mathf.LerpAngle(swingStartAngle, swingEndAngle, t);
-                swordPivot.localEulerAngles = new Vector3(0f, 0f, angle);
-            }
-
-            // Deal damage at the mid-point of the swing arc
-            if (!_damageApplied && t >= 0.5f)
-            {
-                ApplyDamage();
-                _damageApplied = true;
-            }
-
-            if (t >= 1f)
-                _swinging = false;
-        }
-
-        // ── damage ────────────────────────────────────────────────────────
-
-        private void ApplyDamage()
-        {
-            int n = Physics2D.OverlapCircleNonAlloc(transform.position, range, _buffer);
-            for (int i = 0; i < n; i++)
-            {
-                if (!_buffer[i].CompareTag("Enemy")) continue;
-                var hp = _buffer[i].GetComponent<Health>();
-                if (hp != null && !_hitThisSwing.Contains(hp))
+                var nearest = FindNearest();
+                if (nearest != null)
                 {
-                    hp.TakeDamage(damage);
-                    _hitThisSwing.Add(hp);
+                    _timer = 0f;
+                    _attackDir = (nearest.position - transform.position).normalized;
+                    _attacking = true;
+                    _attackTimer = 0f;
+                    _slashFired = false;
                 }
             }
         }
 
-        private bool HasNearbyEnemy()
+        private void SpawnSlash()
         {
-            int n = Physics2D.OverlapCircleNonAlloc(transform.position, range, _buffer);
-            for (int i = 0; i < n; i++)
-                if (_buffer[i].CompareTag("Enemy")) return true;
-            return false;
+            if (slashPrefab == null) return;
+            var go = Instantiate(slashPrefab, transform.position, Quaternion.identity);
+            var sp = go.GetComponent<SlashProjectile>();
+            if (sp != null) sp.Init(damage, _attackDir);
         }
 
-        // ── upgrade hooks ─────────────────────────────────────────────────
+        private Transform FindNearest()
+        {
+            int n = Physics2D.OverlapCircleNonAlloc(transform.position, range, _buffer);
+            Transform nearest = null;
+            float best = float.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                if (!_buffer[i].CompareTag("Enemy")) continue;
+                float d = ((Vector2)(_buffer[i].transform.position - transform.position)).sqrMagnitude;
+                if (d < best) { best = d; nearest = _buffer[i].transform; }
+            }
+            return nearest;
+        }
 
         public void UpgradeDamage(float mult) => damage *= mult;
         public void UpgradeRange(float mult) => range *= mult;
