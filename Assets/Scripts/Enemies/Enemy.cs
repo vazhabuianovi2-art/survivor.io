@@ -22,6 +22,9 @@ namespace SurvivorIO
         [SerializeField] private GameObject xpGemPrefab;
         [SerializeField] private int xpGemCount = 1;
 
+        [Header("Death FX")]
+        [SerializeField] private GameObject deathFxPrefab;
+
         [Header("Scaling (set by WaveManager at runtime)")]
         [SerializeField] private float healthMultiplier = 1f;
         [SerializeField] private float damageMultiplier = 1f;
@@ -121,6 +124,8 @@ namespace SurvivorIO
                     Instantiate(xpGemPrefab, transform.position + (Vector3)offset, Quaternion.identity);
                 }
             }
+            if (deathFxPrefab != null)
+                Instantiate(deathFxPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

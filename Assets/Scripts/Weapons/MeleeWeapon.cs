@@ -86,9 +86,29 @@ namespace SurvivorIO
         private void SpawnSlash()
         {
             if (slashPrefab == null) return;
-            var go = Instantiate(slashPrefab, transform.position, Quaternion.identity);
+
+            // Spawn slightly ahead of player, oriented toward attack direction
+            Vector3 spawnPos = transform.position + (Vector3)(_attackDir * 0.8f);
+            float angle = Mathf.Atan2(_attackDir.y, _attackDir.x) * Mathf.Rad2Deg;
+            var go = Instantiate(slashPrefab, spawnPos, Quaternion.Euler(0f, 0f, angle));
+
             var sp = go.GetComponent<SlashProjectile>();
-            if (sp != null) sp.Init(damage, _attackDir);
+            if (sp != null)
+            {
+                // Traveling projectile (crescent sprite): hand off damage + direction
+                sp.Init(damage, _attackDir);
+            }
+            else
+            {
+                // VFX-only slash (e.g. Slash_A particle): deal damage instantly
+                int n = Physics2D.OverlapCircleNonAlloc(spawnPos, range, _buffer);
+                for (int i = 0; i < n; i++)
+                {
+                    if (!_buffer[i].CompareTag("Enemy")) continue;
+                    _buffer[i].GetComponent<Health>()?.TakeDamage(damage);
+                }
+                Destroy(go, 2f);
+            }
         }
 
         private Transform FindNearest()

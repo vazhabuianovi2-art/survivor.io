@@ -130,6 +130,7 @@ MonoBehaviour:
   visualToFlip: {fileID: 0}
   xpGemPrefab: {fileID: 4437206385273993608, guid: 25ce27fcc540dca4cb65114077908774, type: 3}
   xpGemCount: 15
+  deathFxPrefab: {fileID: 5650613855672902861, guid: ccc0d453510327e49b934fff169309c7, type: 3}
   healthMultiplier: 1
   damageMultiplier: 1
   speedMultiplier: 1
