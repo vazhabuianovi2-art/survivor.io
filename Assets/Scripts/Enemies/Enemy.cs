@@ -15,6 +15,8 @@ namespace SurvivorIO
         [SerializeField] private float moveSpeed = 2f;
         [SerializeField] private float contactDamage = 8f;
         [SerializeField] private SpriteRenderer spriteToFlip;
+        [Tooltip("Rigged-character visual root flipped via localScale.x (preferred over spriteToFlip).")]
+        [SerializeField] private Transform visualToFlip;
 
         [Header("Drops")]
         [SerializeField] private GameObject xpGemPrefab;
@@ -80,8 +82,20 @@ namespace SurvivorIO
             if (dir.sqrMagnitude > 0.0001f) dir.Normalize();
             _rb.linearVelocity = dir * moveSpeed;
 
-            if (spriteToFlip != null && Mathf.Abs(dir.x) > 0.01f)
-                spriteToFlip.flipX = dir.x < 0f;
+            if (Mathf.Abs(dir.x) > 0.01f)
+            {
+                if (visualToFlip != null)
+                {
+                    var s = visualToFlip.localScale;
+                    // Rig faces +x by default; face left when moving left.
+                    s.x = Mathf.Abs(s.x) * (dir.x < 0f ? -1f : 1f);
+                    visualToFlip.localScale = s;
+                }
+                else if (spriteToFlip != null)
+                {
+                    spriteToFlip.flipX = dir.x < 0f;
+                }
+            }
         }
 
         private void HandleDied(Health h)
