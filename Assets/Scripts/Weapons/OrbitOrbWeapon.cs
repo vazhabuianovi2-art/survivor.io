@@ -33,6 +33,11 @@ namespace SurvivorIO
         protected override void OnEquip()    => RebuildOrbs();
         protected override void OnLevelUp()  => RebuildOrbs();
 
+        private void OnDestroy()
+        {
+            foreach (var o in _orbs) if (o != null) Destroy(o.gameObject);
+        }
+
         private void RebuildOrbs()
         {
             foreach (var o in _orbs) if (o != null) Destroy(o.gameObject);

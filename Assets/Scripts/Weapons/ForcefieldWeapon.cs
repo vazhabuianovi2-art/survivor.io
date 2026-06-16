@@ -23,6 +23,11 @@ namespace SurvivorIO
         protected override void OnEquip()   => BuildOrUpdateRing();
         protected override void OnLevelUp() => BuildOrUpdateRing();
 
+        private void OnDestroy()
+        {
+            if (_ring != null) Destroy(_ring.gameObject);
+        }
+
         private void BuildOrUpdateRing()
         {
             if (_ring == null)

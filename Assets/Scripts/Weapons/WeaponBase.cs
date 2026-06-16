@@ -11,10 +11,13 @@ namespace SurvivorIO
     /// </summary>
     public abstract class WeaponBase : MonoBehaviour
     {
-        public const int MaxLevel = 5;
+        public virtual int MaxLevel => 5;
 
         public int Level { get; private set; } = 1;
         public bool IsMaxed => Level >= MaxLevel;
+
+        /// <summary>True for evolved weapons — they never appear as level-up offers.</summary>
+        public virtual bool IsEvolved => false;
 
         /// <summary>Name shown on level-up cards and HUD.</summary>
         public abstract string DisplayName { get; }

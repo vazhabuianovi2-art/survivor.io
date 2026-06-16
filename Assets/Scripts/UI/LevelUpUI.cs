@@ -84,6 +84,16 @@ namespace SurvivorIO
                 {
                     _cardTitles[i].text = _current[i].Name;
                     _cardDescs[i].text = _current[i].Description;
+
+                    // Highlight evolution offers in gold.
+                    bool evolve = _current[i].Name.StartsWith("★");
+                    if (_cardButtons[i].targetGraphic is Image img)
+                        img.color = evolve
+                            ? new Color(0.42f, 0.34f, 0.10f, 1f)
+                            : new Color(0.16f, 0.18f, 0.26f, 1f);
+                    _cardTitles[i].color = evolve
+                        ? new Color(1f, 0.8f, 0.15f)
+                        : new Color(1f, 0.85f, 0.3f);
                 }
             }
 

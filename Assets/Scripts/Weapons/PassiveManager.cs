@@ -45,6 +45,9 @@ namespace SurvivorIO
             return false;
         }
 
+        /// <summary>Public check used by weapon-evolution requirements.</summary>
+        public bool HasPassive(string name) => Owns(name);
+
         public List<Skill> BuildPassiveSkills()
         {
             var skills = new List<Skill>();

@@ -33,6 +33,11 @@ namespace SurvivorIO
         protected override void OnEquip()   => Rebuild();
         protected override void OnLevelUp() => Rebuild();
 
+        private void OnDestroy()
+        {
+            foreach (var d in _drones) if (d != null) Destroy(d.gameObject);
+        }
+
         private void Rebuild()
         {
             foreach (var d in _drones) if (d != null) Destroy(d.gameObject);

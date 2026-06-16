@@ -46,6 +46,28 @@ namespace SurvivorIO
             new WeaponDef { Name = "Drones",       AcquireDesc = "Companion drones that shoot for you",      Type = typeof(DroneWeapon) },
         };
 
+        private struct EvolutionDef
+        {
+            public Type Base;
+            public string Passive;
+            public Type Evolved;
+            public string Name;
+            public string Desc;
+        }
+
+        // Maxed weapon + required passive → evolved form.
+        private readonly List<EvolutionDef> _evolutions = new List<EvolutionDef>
+        {
+            new EvolutionDef { Base = typeof(MagicBoltWeapon),   Passive = "Power",    Evolved = typeof(ArcaneStormWeapon),  Name = "Arcane Storm",   Desc = "Magic Bolt → a barrage of bolts" },
+            new EvolutionDef { Base = typeof(KunaiWeapon),       Passive = "Cooldown", Evolved = typeof(ShurikenStormWeapon),Name = "Shuriken Storm", Desc = "Kunai → a 360° storm of knives" },
+            new EvolutionDef { Base = typeof(EnergyLaserWeapon), Passive = "Power",    Evolved = typeof(DeathRayWeapon),     Name = "Death Ray",      Desc = "Laser → a rapid piercing death ray" },
+            new EvolutionDef { Base = typeof(OrbitOrbWeapon),    Passive = "Cooldown", Evolved = typeof(SaturnRingWeapon),   Name = "Saturn Ring",    Desc = "Orbs → a giant fast ring" },
+            new EvolutionDef { Base = typeof(DroneWeapon),       Passive = "Power",    Evolved = typeof(DroneSwarmWeapon),   Name = "Drone Swarm",    Desc = "Drones → a fast-firing swarm" },
+            new EvolutionDef { Base = typeof(ForcefieldWeapon),  Passive = "Vitality", Evolved = typeof(BlackHoleWeapon),    Name = "Black Hole",     Desc = "Forcefield → a pulling black hole" },
+        };
+
+        private PassiveManager _passives;
+
         private void Awake()
         {
             Instance = this;
@@ -110,7 +132,44 @@ namespace SurvivorIO
                 }
             }
 
+            // Evolution offers: a maxed base weapon + its required passive.
+            if (_passives == null) _passives = FindFirstObjectByType<PassiveManager>();
+            if (_passives != null)
+            {
+                foreach (var w in _weapons)
+                {
+                    if (w.IsEvolved || !w.IsMaxed) continue;
+                    foreach (var ev in _evolutions)
+                    {
+                        if (ev.Base != w.GetType()) continue;
+                        if (!_passives.HasPassive(ev.Passive)) continue;
+                        if (Owns(ev.Evolved)) continue;
+
+                        var baseW = w;
+                        var def = ev;
+                        skills.Add(new Skill(
+                            $"★ EVOLVE: {def.Name}",
+                            def.Desc,
+                            () => Evolve(baseW, def.Evolved)));
+                    }
+                }
+            }
+
             return skills;
+        }
+
+        private void Evolve(WeaponBase baseWeapon, Type evolvedType)
+        {
+            var owner = _player != null ? _player : baseWeapon.transform;
+            _weapons.Remove(baseWeapon);
+            Destroy(baseWeapon);
+
+            var evolved = (WeaponBase)owner.gameObject.AddComponent(evolvedType);
+            evolved.Initialize(owner);
+            _weapons.Add(evolved);
+
+            if (CameraFollow.Instance != null) CameraFollow.Instance.Shake(0.3f, 0.25f);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayLevelUp();
         }
     }
 }
