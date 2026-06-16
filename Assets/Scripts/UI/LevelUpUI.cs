@@ -14,6 +14,8 @@ namespace SurvivorIO
         [SerializeField] private Canvas canvas;
 
         private PlayerExperience _xp;
+        private WeaponManager _weapons;
+        private PassiveManager _passives;
         private GameObject _panel;
         private readonly Button[] _cardButtons = new Button[3];
         private readonly Text[] _cardTitles = new Text[3];
@@ -38,6 +40,8 @@ namespace SurvivorIO
             if (player == null) return;
 
             _xp = player.GetComponent<PlayerExperience>();
+            _weapons = FindFirstObjectByType<WeaponManager>();
+            _passives = FindFirstObjectByType<PassiveManager>();
             BuildSkillList(player);
             if (_xp != null) _xp.LeveledUp += OnLeveledUp;
         }
@@ -56,7 +60,15 @@ namespace SurvivorIO
         private void ShowChoices()
         {
             _current.Clear();
+
+            // Static skills (sword upgrades + universal) plus dynamic weapon
+            // choices from the WeaponManager (acquire / level up auto-weapons).
             var pool = new List<Skill>(_allSkills);
+            if (_weapons != null)
+                pool.AddRange(_weapons.BuildWeaponSkills());
+            if (_passives != null)
+                pool.AddRange(_passives.BuildPassiveSkills());
+
             for (int i = 0; i < 3 && pool.Count > 0; i++)
             {
                 int idx = Random.Range(0, pool.Count);
@@ -98,10 +110,8 @@ namespace SurvivorIO
 
         private void BuildSkillList(GameObject player)
         {
-            var ranged   = player.GetComponent<AutoAttackWeapon>();
-            var melee    = player.GetComponent<MeleeWeapon>();
-            var movement = player.GetComponent<PlayerMovement>();
-            var health   = player.GetComponent<PlayerHealthController>();
+            var ranged = player.GetComponent<AutoAttackWeapon>();
+            var melee  = player.GetComponent<MeleeWeapon>();
 
             // Melee weapon skills (when MeleeWeapon is present and enabled)
             if (melee != null && melee.enabled)
@@ -121,11 +131,8 @@ namespace SurvivorIO
                 _allSkills.Add(new Skill("Multi Shot",   "+1 projectile per volley",() => ranged.UpgradeProjectileCount(1)));
             }
 
-            // Universal skills
-            if (movement != null)
-                _allSkills.Add(new Skill("Swift Feet", "+15% movement speed", () => movement.UpgradeMoveSpeed(1.15f)));
-            if (health != null)
-                _allSkills.Add(new Skill("Iron Body", "+25 max HP", () => health.UpgradeMaxHealth(25f)));
+            // Movement / health are now covered by the Swift Boots / Vitality
+            // passive items (see PassiveManager), so no universal skills here.
         }
 
         // ---------- UI construction ----------

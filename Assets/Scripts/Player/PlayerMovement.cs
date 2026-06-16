@@ -78,7 +78,7 @@ namespace SurvivorIO
 
         private void FixedUpdate()
         {
-            _rb.linearVelocity = _input * moveSpeed;
+            _rb.linearVelocity = _input * (moveSpeed * PlayerStats.MoveSpeed);
         }
 
         /// <summary>Used by level-up skills to boost movement speed.</summary>

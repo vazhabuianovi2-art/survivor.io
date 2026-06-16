@@ -40,7 +40,7 @@ namespace SurvivorIO
             if (_player == null) return;
 
             float dist = Vector2.Distance(transform.position, _player.position);
-            if (!_magnetized && dist <= pickupRadius)
+            if (!_magnetized && dist <= pickupRadius * PlayerStats.Pickup)
                 _magnetized = true;
 
             if (_magnetized)

@@ -31,7 +31,7 @@ namespace SurvivorIO
         public void AddXp(float amount)
         {
             if (amount <= 0f) return;
-            Xp += amount;
+            Xp += amount * PlayerStats.Xp;
 
             while (Xp >= XpToNext)
             {

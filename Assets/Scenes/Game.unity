@@ -1002,6 +1002,9 @@ GameObject:
   - component: {fileID: 1107126611}
   - component: {fileID: 1107126612}
   - component: {fileID: 1107126613}
+  - component: {fileID: 1107126614}
+  - component: {fileID: 1107126616}
+  - component: {fileID: 1107126615}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1282,6 +1285,94 @@ MonoBehaviour:
   popupColor: {r: 1, g: 0.35, b: 0.35, a: 1}
   shakeOnHit: 1
   shakeMagnitude: 0.22
+--- !u!114 &1107126614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107126601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386faf7397e5b214589cd6c9564c50ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.WeaponManager
+  maxWeapons: 5
+  projectilePrefab: {fileID: 2762101308843041905, guid: 5f261e14dd7f7a94ab172cee539fd90f, type: 3}
+--- !u!114 &1107126615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107126601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a43e0fe1defcedf4e95946fbd0925318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.PassiveManager
+  maxPassives: 6
+--- !u!114 &1107126616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107126601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 223ac7575299a7342bb94ac7d096daf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.PlayerStats
+  DamageMult: 1
+  CooldownMult: 1
+  MoveSpeedMult: 1
+  PickupRangeMult: 1
+  XpMult: 1
+--- !u!1 &1109317732
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1109317734}
+  - component: {fileID: 1109317733}
+  m_Layer: 0
+  m_Name: WeaponHUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1109317733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109317732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c7a5f397afe60468f42a8930fb561c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.WeaponHUD
+--- !u!4 &1109317734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109317732}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1225975096
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1906,3 +1997,4 @@ SceneRoots:
   - {fileID: 1893523435}
   - {fileID: 1066490581}
   - {fileID: 2001561144}
+  - {fileID: 1109317734}

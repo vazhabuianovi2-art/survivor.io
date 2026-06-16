@@ -69,7 +69,7 @@ namespace SurvivorIO
             }
 
             _timer += Time.deltaTime;
-            if (_timer >= cooldown)
+            if (_timer >= cooldown * PlayerStats.Cooldown)
             {
                 var nearest = FindNearest();
                 if (nearest != null)
@@ -87,6 +87,8 @@ namespace SurvivorIO
         {
             if (slashPrefab == null) return;
 
+            float dmg = damage * PlayerStats.Damage;
+
             // Spawn slightly ahead of player, oriented toward attack direction
             Vector3 spawnPos = transform.position + (Vector3)(_attackDir * 0.8f);
             float angle = Mathf.Atan2(_attackDir.y, _attackDir.x) * Mathf.Rad2Deg;
@@ -96,7 +98,7 @@ namespace SurvivorIO
             if (sp != null)
             {
                 // Traveling projectile (crescent sprite): hand off damage + direction
-                sp.Init(damage, _attackDir);
+                sp.Init(dmg, _attackDir);
             }
             else
             {
@@ -105,7 +107,7 @@ namespace SurvivorIO
                 for (int i = 0; i < n; i++)
                 {
                     if (!_buffer[i].CompareTag("Enemy")) continue;
-                    _buffer[i].GetComponent<Health>()?.TakeDamage(damage);
+                    _buffer[i].GetComponent<Health>()?.TakeDamage(dmg);
                 }
                 Destroy(go, 2f);
             }
