@@ -42,5 +42,14 @@ namespace SurvivorIO
             }
             Changed?.Invoke();
         }
+
+        /// <summary>Grant a free level (used by chest rewards) — opens a skill choice.</summary>
+        public void GrantBonusLevel()
+        {
+            Level++;
+            XpToNext = Mathf.Ceil(baseXpToNext * Mathf.Pow(growth, Level - 1));
+            LeveledUp?.Invoke(Level);
+            Changed?.Invoke();
+        }
     }
 }

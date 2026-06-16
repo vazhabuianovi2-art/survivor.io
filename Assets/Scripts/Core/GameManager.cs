@@ -12,8 +12,19 @@ namespace SurvivorIO
         public bool IsGameOver { get; private set; }
         public bool IsGameWon { get; private set; }
 
+        /// <summary>Gold collected during this run (persisted to meta in Phase 4).</summary>
+        public int Gold { get; private set; }
+
         public event Action GameOver;
         public event Action GameWon;
+        public event Action GoldChanged;
+
+        public void AddGold(int amount)
+        {
+            if (amount <= 0) return;
+            Gold += amount;
+            GoldChanged?.Invoke();
+        }
 
         private void Awake()
         {

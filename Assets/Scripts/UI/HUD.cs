@@ -19,6 +19,7 @@ namespace SurvivorIO
         private Text _levelText;
         private Text _timerText;
         private Text _killsText;
+        private Text _goldText;
         private Font _font;
 
         private void Awake()
@@ -57,6 +58,7 @@ namespace SurvivorIO
             {
                 int t = Mathf.FloorToInt(GameManager.Instance.ElapsedTime);
                 _timerText.text = $"{t / 60:00}:{t % 60:00}";
+                _goldText.text = $"Gold  {GameManager.Instance.Gold}";
             }
 
             _killsText.text = $"Kills  {Enemy.KillCount}";
@@ -93,6 +95,10 @@ namespace SurvivorIO
             _killsText = CreateLabel("Kills", new Vector2(1f, 1f), new Vector2(1f, 1f),
                 new Vector2(-24f, -72f), 34, TextAnchor.UpperRight, "Kills  0");
             _killsText.color = new Color(1f, 0.7f, 0.7f);
+
+            _goldText = CreateLabel("Gold", new Vector2(1f, 1f), new Vector2(1f, 1f),
+                new Vector2(-24f, -112f), 30, TextAnchor.UpperRight, "Gold  0");
+            _goldText.color = new Color(1f, 0.85f, 0.3f);
         }
 
         private RectTransform CreateBar(string name, float y, float height, Color bgColor, Color fillColor)

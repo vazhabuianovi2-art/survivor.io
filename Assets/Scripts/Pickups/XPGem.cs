@@ -20,6 +20,9 @@ namespace SurvivorIO
 
         public void SetValue(float v) => value = v;
 
+        /// <summary>Force this gem to fly to the player (used by the Magnet pickup).</summary>
+        public void PullNow() => _magnetized = true;
+
         private void Awake()
         {
             GetComponent<Collider2D>().isTrigger = true;

@@ -21,6 +21,8 @@ namespace SurvivorIO
         [Header("Drops")]
         [SerializeField] private GameObject xpGemPrefab;
         [SerializeField] private int xpGemCount = 1;
+        [Tooltip("Elite / boss: drop a reward chest on death instead of the usual loot.")]
+        [SerializeField] private bool dropsChest = false;
 
         [Header("Death FX")]
         [SerializeField] private GameObject deathFxPrefab;
@@ -113,6 +115,27 @@ namespace SurvivorIO
             }
         }
 
+        private void DropLoot()
+        {
+            if (dropsChest)
+            {
+                Pickup.Spawn(PickupType.Chest, transform.position);
+                return;
+            }
+
+            Vector3 Jitter() => transform.position + (Vector3)(Random.insideUnitCircle * 0.3f);
+
+            // Most enemies drop a little gold.
+            if (Random.value < 0.5f)
+                Pickup.Spawn(PickupType.Gold, Jitter(), Random.Range(1, 4));
+
+            // Rare consumables.
+            float r = Random.value;
+            if (r < 0.02f)      Pickup.Spawn(PickupType.Magnet, Jitter());
+            else if (r < 0.04f) Pickup.Spawn(PickupType.Bomb, Jitter());
+            else if (r < 0.07f) Pickup.Spawn(PickupType.Heal, Jitter());
+        }
+
         private void HandleDied(Health h)
         {
             KillCount++;
@@ -128,6 +151,8 @@ namespace SurvivorIO
                 Instantiate(deathFxPrefab, transform.position, Quaternion.identity);
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PlayDeath();
+
+            DropLoot();
             Destroy(gameObject);
         }
     }
