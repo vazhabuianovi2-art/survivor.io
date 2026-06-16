@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1551539132866503256}
   - component: {fileID: 8530469001246447482}
   - component: {fileID: 7961977528002346261}
+  - component: {fileID: 5715582620418047352}
   m_Layer: 0
   m_Name: GoblinEnemy
   m_TagString: Enemy
@@ -93,6 +94,11 @@ MonoBehaviour:
   spriteToFlip: {fileID: 0}
   visualToFlip: {fileID: 8893598897553859727}
   xpGemPrefab: {fileID: 4437206385273993608, guid: 25ce27fcc540dca4cb65114077908774, type: 3}
+  xpGemCount: 1
+  deathFxPrefab: {fileID: 0}
+  healthMultiplier: 1
+  damageMultiplier: 1
+  speedMultiplier: 1
 --- !u!58 &7961977528002346261
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -129,6 +135,25 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &5715582620418047352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177944843683454979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4823d38089e9240a66bebc565877f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.HitFeedback
+  punchTarget: {fileID: 0}
+  punchAmount: 0.18
+  punchDuration: 0.12
+  showPopup: 1
+  popupColor: {r: 1, g: 0.95, b: 0.4, a: 1}
+  shakeOnHit: 0
+  shakeMagnitude: 0.18
 --- !u!1001 &7801289092181073233
 PrefabInstance:
   m_ObjectHideFlags: 0

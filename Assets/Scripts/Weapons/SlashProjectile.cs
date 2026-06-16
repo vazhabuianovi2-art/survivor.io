@@ -8,9 +8,12 @@ namespace SurvivorIO
         [SerializeField] private float speed       = 8f;
         [SerializeField] private float maxDistance = 2.5f;
         [SerializeField] private float hitRadius   = 0.5f;
+        [Tooltip("Degrees added on top of the travel angle so the crescent's convex (cutting) edge leads the direction of travel.")]
+        [SerializeField] private float facingOffsetDeg = -45f;
 
         private float _damage;
         private float _traveled;
+        private Vector2 _dir = Vector2.right;
         private readonly Collider2D[] _buf = new Collider2D[16];
         private readonly HashSet<Health> _hit = new HashSet<Health>();
 
@@ -23,14 +26,18 @@ namespace SurvivorIO
 
         public void Init(float damage, Vector2 direction)
         {
-            _damage       = damage;
-            transform.up  = direction;
+            _damage = damage;
+            _dir    = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.right;
+
+            // Orient so the crescent's convex (cutting) edge leads travel direction.
+            float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg + facingOffsetDeg;
+            transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
 
         private void Update()
         {
             float step = speed * Time.deltaTime;
-            transform.position += (Vector3)(Vector2)transform.up * step;
+            transform.position += (Vector3)(_dir * step);
             _traveled += step;
 
             // Fade out only in the last 30% of travel

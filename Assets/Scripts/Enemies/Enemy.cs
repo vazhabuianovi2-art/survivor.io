@@ -126,6 +126,8 @@ namespace SurvivorIO
             }
             if (deathFxPrefab != null)
                 Instantiate(deathFxPrefab, transform.position, Quaternion.identity);
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlayDeath();
             Destroy(gameObject);
         }
     }
