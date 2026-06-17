@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8810223873530948969}
   - component: {fileID: 7418317081022437353}
   - component: {fileID: 7868701379141829732}
+  - component: {fileID: 719784987155539804}
   m_Layer: 0
   m_Name: Bat
   m_TagString: Enemy
@@ -131,6 +132,7 @@ MonoBehaviour:
   visualToFlip: {fileID: 0}
   xpGemPrefab: {fileID: 4437206385273993608, guid: 25ce27fcc540dca4cb65114077908774, type: 3}
   xpGemCount: 1
+  dropsChest: 0
   deathFxPrefab: {fileID: 5650613855672902861, guid: ccc0d453510327e49b934fff169309c7, type: 3}
   healthMultiplier: 1
   damageMultiplier: 1
@@ -154,6 +156,21 @@ MonoBehaviour:
   popupColor: {r: 1, g: 0.95, b: 0.4, a: 1}
   shakeOnHit: 0
   shakeMagnitude: 0.18
+--- !u!114 &719784987155539804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7075465528058655212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0daf45183be979747a3d37426c131df4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.ExploderBehavior
+  explodeRange: 0.9
+  blastRadius: 1.9
+  blastDamage: 22
 --- !u!1001 &8103957802127280992
 PrefabInstance:
   m_ObjectHideFlags: 0

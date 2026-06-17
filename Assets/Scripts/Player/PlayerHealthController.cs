@@ -49,7 +49,7 @@ namespace SurvivorIO
 
             if (damage > 0f)
             {
-                _health.TakeDamage(damage);
+                _health.TakeDamage(damage * PlayerStats.DamageTaken);
                 _invuln = invulnTime;
             }
         }

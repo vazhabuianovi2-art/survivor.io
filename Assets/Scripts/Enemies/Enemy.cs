@@ -51,6 +51,17 @@ namespace SurvivorIO
         private Rigidbody2D _rb;
         private Health _health;
         private Transform _target;
+        private bool _moveCeded;
+
+        // Exposed so optional behavior components (Charger/Ranged/…) can drive movement.
+        public Transform Target => _target;
+        public Rigidbody2D Body => _rb;
+        public Health HealthComp => _health;
+        public float BaseMoveSpeed => moveSpeed;
+        public float ContactDamageValue => contactDamage;
+
+        /// <summary>Called by a behavior component to take over movement from the default chase.</summary>
+        public void CedeMovement() => _moveCeded = true;
 
         private void Awake()
         {
@@ -95,23 +106,30 @@ namespace SurvivorIO
                 return;
             }
 
-            Vector2 dir = (Vector2)_target.position - _rb.position;
-            if (dir.sqrMagnitude > 0.0001f) dir.Normalize();
-            _rb.linearVelocity = dir * moveSpeed;
-
-            if (Mathf.Abs(dir.x) > 0.01f)
+            if (!_moveCeded)
             {
-                if (visualToFlip != null)
-                {
-                    var s = visualToFlip.localScale;
-                    // Rig faces +x by default; face left when moving left.
-                    s.x = Mathf.Abs(s.x) * (dir.x < 0f ? -1f : 1f);
-                    visualToFlip.localScale = s;
-                }
-                else if (spriteToFlip != null)
-                {
-                    spriteToFlip.flipX = dir.x < 0f;
-                }
+                Vector2 dir = (Vector2)_target.position - _rb.position;
+                if (dir.sqrMagnitude > 0.0001f) dir.Normalize();
+                _rb.linearVelocity = dir * moveSpeed;
+            }
+
+            // Flip to face travel direction (works for ceded behaviors too).
+            Flip(_rb.linearVelocity.x);
+        }
+
+        /// <summary>Flip the visual to face the given horizontal velocity.</summary>
+        public void Flip(float vx)
+        {
+            if (Mathf.Abs(vx) <= 0.01f) return;
+            if (visualToFlip != null)
+            {
+                var s = visualToFlip.localScale;
+                s.x = Mathf.Abs(s.x) * (vx < 0f ? -1f : 1f);
+                visualToFlip.localScale = s;
+            }
+            else if (spriteToFlip != null)
+            {
+                spriteToFlip.flipX = vx < 0f;
             }
         }
 

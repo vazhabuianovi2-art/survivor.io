@@ -49,6 +49,7 @@ namespace SurvivorIO
         {
             if (IsGameOver || IsGameWon) return;
             IsGameOver = true;
+            MetaProgress.BankRunGold(Gold);
             Time.timeScale = 0f;
             GameOver?.Invoke();
         }
@@ -57,6 +58,7 @@ namespace SurvivorIO
         {
             if (IsGameOver || IsGameWon) return;
             IsGameWon = true;
+            MetaProgress.BankRunGold(Gold);
             Time.timeScale = 0f;
             GameWon?.Invoke();
         }

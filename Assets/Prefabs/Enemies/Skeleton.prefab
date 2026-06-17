@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2288790560880275448}
   - component: {fileID: 8824526444475472222}
   - component: {fileID: 1571896111341127344}
+  - component: {fileID: 118718514685953159}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Enemy
@@ -131,6 +132,7 @@ MonoBehaviour:
   visualToFlip: {fileID: 0}
   xpGemPrefab: {fileID: 4437206385273993608, guid: 25ce27fcc540dca4cb65114077908774, type: 3}
   xpGemCount: 2
+  dropsChest: 0
   deathFxPrefab: {fileID: 5650613855672902861, guid: ccc0d453510327e49b934fff169309c7, type: 3}
   healthMultiplier: 1
   damageMultiplier: 1
@@ -154,6 +156,24 @@ MonoBehaviour:
   popupColor: {r: 1, g: 0.95, b: 0.4, a: 1}
   shakeOnHit: 0
   shakeMagnitude: 0.18
+--- !u!114 &118718514685953159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6742946714234680094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34bb810372624844e9f96d2ef5559691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.RangedBehavior
+  preferredMin: 4
+  preferredMax: 6.5
+  moveSpeed: 2.2
+  fireInterval: 2
+  projectileSpeed: 5.5
+  projectileDamage: 6
 --- !u!1001 &7909272402384775753
 PrefabInstance:
   m_ObjectHideFlags: 0

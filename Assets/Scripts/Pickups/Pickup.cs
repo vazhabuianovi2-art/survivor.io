@@ -79,7 +79,8 @@ namespace SurvivorIO
             switch (_type)
             {
                 case PickupType.Gold:
-                    GameManager.Instance?.AddGold(Mathf.Max(1, Mathf.RoundToInt(_value)));
+                    GameManager.Instance?.AddGold(
+                        Mathf.Max(1, Mathf.RoundToInt(_value * MetaProgress.GoldMult)));
                     break;
 
                 case PickupType.Magnet:
@@ -97,7 +98,7 @@ namespace SurvivorIO
                     break;
 
                 case PickupType.Chest:
-                    GameManager.Instance?.AddGold(50);
+                    GameManager.Instance?.AddGold(Mathf.RoundToInt(50f * MetaProgress.GoldMult));
                     HealPlayer(30f);
                     _player.GetComponent<PlayerExperience>()?.GrantBonusLevel();
                     break;

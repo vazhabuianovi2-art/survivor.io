@@ -15,6 +15,7 @@ namespace SurvivorIO
         public float MoveSpeedMult  = 1f;
         public float PickupRangeMult = 1f;  // XP gem magnet range
         public float XpMult         = 1f;
+        public float DamageTakenMult = 1f;  // scales contact damage to the player
 
         private Health _health;
 
@@ -22,6 +23,9 @@ namespace SurvivorIO
         {
             Instance = this;
             _health = GetComponent<Health>();
+
+            // Apply persistent meta-progression (permanent upgrades + character).
+            MetaProgress.ApplyTo(this, _health);
         }
 
         /// <summary>Raise max HP and heal by the same amount (used by the Vitality passive).</summary>
@@ -39,5 +43,6 @@ namespace SurvivorIO
         public static float MoveSpeed => Instance != null ? Instance.MoveSpeedMult : 1f;
         public static float Pickup    => Instance != null ? Instance.PickupRangeMult : 1f;
         public static float Xp        => Instance != null ? Instance.XpMult : 1f;
+        public static float DamageTaken => Instance != null ? Instance.DamageTakenMult : 1f;
     }
 }

@@ -1329,6 +1329,7 @@ MonoBehaviour:
   MoveSpeedMult: 1
   PickupRangeMult: 1
   XpMult: 1
+  DamageTakenMult: 1
 --- !u!1 &1109317732
 GameObject:
   m_ObjectHideFlags: 0
