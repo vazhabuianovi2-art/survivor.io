@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6892927403981894920}
   - component: {fileID: 1322523055975456223}
   - component: {fileID: 5750568073530502236}
+  - component: {fileID: 6292786234246456955}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Enemy
@@ -155,6 +156,23 @@ MonoBehaviour:
   popupColor: {r: 1, g: 0.95, b: 0.4, a: 1}
   shakeOnHit: 0
   shakeMagnitude: 0.18
+--- !u!114 &6292786234246456955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647263042769094192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e4216287b50ea47ab80158fac08492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorIO.BossBehavior
+  attackInterval: 3
+  projectileSpeed: 5
+  projectileDamage: 10
+  summonPrefab: {fileID: 6296907001131716634, guid: 60def9108d1d9134fb4c237f7878c72b, type: 3}
+  summonCount: 3
 --- !u!1001 &2755638332036219689
 PrefabInstance:
   m_ObjectHideFlags: 0
