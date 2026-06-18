@@ -56,6 +56,11 @@ namespace SurvivorIO
 
         private void OnDied(Health h)
         {
+            // Offer a one-time revive before ending the run.
+            if (ReviveUI.Instance != null && ReviveUI.Instance.CanRevive &&
+                ReviveUI.Instance.Offer(h))
+                return;
+
             if (GameManager.Instance != null)
                 GameManager.Instance.TriggerGameOver();
         }

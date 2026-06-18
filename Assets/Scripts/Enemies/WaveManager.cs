@@ -42,12 +42,19 @@ namespace SurvivorIO
         [Header("Spawn placement")]
         [SerializeField] private float spawnMargin = 2f;
 
+        [Header("Elites")]
+        [Tooltip("Seconds between elite spawns (tough, gold-tinted, drops a chest).")]
+        [SerializeField] private float eliteInterval = 40f;
+        [Tooltip("Elites start appearing after this time.")]
+        [SerializeField] private float eliteStartTime = 30f;
+
         private Transform _target;
         private Camera _cam;
         private float[] _timers;
         private bool _miniBossSpawned;
         private bool _bossSpawned;
         private float _elapsed;
+        private float _eliteTimer;
 
         private void Start()
         {
@@ -80,6 +87,17 @@ namespace SurvivorIO
                 }
             }
 
+            // Elites (periodic)
+            if (_elapsed >= eliteStartTime)
+            {
+                _eliteTimer += Time.deltaTime;
+                if (_eliteTimer >= eliteInterval)
+                {
+                    _eliteTimer = 0f;
+                    SpawnElite();
+                }
+            }
+
             // Mini-boss (once)
             if (!_miniBossSpawned && miniBossPrefab != null && _elapsed >= miniBossTime)
             {
@@ -99,6 +117,22 @@ namespace SurvivorIO
                     BossHealthBar.Instance?.SetBoss(bossHp, "DARK KNIGHT");
                 }
             }
+        }
+
+        private void SpawnElite()
+        {
+            GameObject prefab = null;
+            for (int tries = 0; tries < 8 && prefab == null; tries++)
+            {
+                var w = waves[Random.Range(0, waves.Length)];
+                if (w.prefab != null && _elapsed >= w.unlockTime) prefab = w.prefab;
+            }
+            if (prefab == null && waves.Length > 0) prefab = waves[0].prefab;
+            if (prefab == null) return;
+
+            var go = SpawnAt(prefab, RandomSpawnPos());
+            var enemy = go.GetComponent<Enemy>();
+            if (enemy != null) enemy.MakeElite();
         }
 
         private static float CurrentInterval(EnemyWaveConfig w, float timeInWave)

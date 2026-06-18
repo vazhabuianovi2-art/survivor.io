@@ -32,11 +32,28 @@ namespace SurvivorIO
             sr.sortingOrder = 8;
             go.transform.localScale = Vector3.one * (type == PickupType.Chest ? 0.9f : 0.5f);
 
+            // Rarity loot beam above valuable drops (not plain gold coins).
+            if (type != PickupType.Gold)
+                AddBeam(go.transform, ColorFor(type));
+
             var p = go.AddComponent<Pickup>();
             p._type = type;
             p._value = value;
             if (type == PickupType.Chest) p._pickupRadius = 1.2f;
             return p;
+        }
+
+        private static void AddBeam(Transform parent, Color color)
+        {
+            var beam = new GameObject("Beam");
+            beam.transform.SetParent(parent, false);
+            beam.transform.localPosition = new Vector3(0f, 1.4f, 0f);
+            beam.transform.localScale = new Vector3(0.7f, 7f, 1f);
+            var sr = beam.AddComponent<SpriteRenderer>();
+            sr.sprite = FxSprites.SoftDisc();
+            sr.sortingOrder = 6;            // behind the pickup icon (order 8)
+            var c = color; c.a = 0.45f;
+            sr.color = c;
         }
 
         private static Color ColorFor(PickupType t)

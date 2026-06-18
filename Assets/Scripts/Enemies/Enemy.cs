@@ -63,6 +63,17 @@ namespace SurvivorIO
         /// <summary>Called by a behavior component to take over movement from the default chase.</summary>
         public void CedeMovement() => _moveCeded = true;
 
+        /// <summary>Upgrade a freshly spawned enemy into a tougher, gold-tinted elite that drops a chest.</summary>
+        public void MakeElite()
+        {
+            transform.localScale *= 1.5f;
+            if (_health != null) _health.SetMaxHealth(_health.Max * 2.5f, refill: true);
+            contactDamage *= 1.4f;
+            dropsChest = true;
+            foreach (var sr in GetComponentsInChildren<SpriteRenderer>())
+                sr.color = new Color(1f, 0.82f, 0.35f);   // golden elite tint
+        }
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();

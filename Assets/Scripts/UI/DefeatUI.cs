@@ -39,7 +39,18 @@ namespace SurvivorIO
         private void OnGameOver()
         {
             int t = Mathf.FloorToInt(GameManager.Instance.ElapsedTime);
-            _statsText.text = $"Survived  {t / 60:00}:{t % 60:00}\nKills  {Enemy.KillCount}";
+            int level = 1;
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                var xp = player.GetComponent<PlayerExperience>();
+                if (xp != null) level = xp.Level;
+            }
+            _statsText.text =
+                $"Survived  {t / 60:00}:{t % 60:00}\n" +
+                $"Kills  {Enemy.KillCount}\n" +
+                $"Level  {level}\n" +
+                $"Gold earned  {GameManager.Instance.Gold}";
             _panel.SetActive(true);
         }
 

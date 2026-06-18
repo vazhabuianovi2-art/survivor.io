@@ -52,5 +52,12 @@ namespace SurvivorIO
             if (IsDead || amount <= 0f) return;
             Current = Mathf.Min(maxHealth, Current + amount);
         }
+
+        /// <summary>Bring a dead entity back to life with the given health (used by Revive).</summary>
+        public void Revive(float toHealth)
+        {
+            IsDead = false;
+            Current = Mathf.Clamp(toHealth, 1f, maxHealth);
+        }
     }
 }
