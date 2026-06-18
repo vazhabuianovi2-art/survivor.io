@@ -97,7 +97,7 @@ namespace SurvivorIO
             {
                 case PickupType.Gold:
                     GameManager.Instance?.AddGold(
-                        Mathf.Max(1, Mathf.RoundToInt(_value * MetaProgress.GoldMult)));
+                        Mathf.Max(1, Mathf.RoundToInt(_value * MetaProgress.GoldMult * ComboManager.GoldMult)));
                     break;
 
                 case PickupType.Magnet:

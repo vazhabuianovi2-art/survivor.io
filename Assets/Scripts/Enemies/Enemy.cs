@@ -41,6 +41,9 @@ namespace SurvivorIO
         /// <summary>Total enemies killed this run (drives the kill counter UI in stage 5).</summary>
         public static int KillCount { get; private set; }
 
+        /// <summary>Raised whenever any enemy dies (drives the combo/kill-streak system).</summary>
+        public static event System.Action Killed;
+
         /// <summary>Reset run-scoped counters (call when a new run starts).</summary>
         public static void ResetCounters()
         {
@@ -168,6 +171,7 @@ namespace SurvivorIO
         private void HandleDied(Health h)
         {
             KillCount++;
+            Killed?.Invoke();
             if (xpGemPrefab != null)
             {
                 for (int i = 0; i < xpGemCount; i++)
