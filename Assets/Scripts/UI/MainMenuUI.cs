@@ -14,12 +14,13 @@ namespace SurvivorIO
         private Canvas _canvas;
         private Font _font;
 
-        private GameObject _main, _shop, _chars, _stages, _settings;
-        private Text _goldMain, _goldShop, _goldChars, _goldStages;
+        private GameObject _main, _shop, _chars, _stages, _settings, _gear;
+        private Text _goldMain, _goldShop, _goldChars, _goldStages, _goldGear;
         private Text _sfxVal, _musVal;
         private readonly Text[] _shopRows = new Text[6];
         private readonly Text[] _charRows = new Text[3];
         private readonly Text[] _stageRows = new Text[3];
+        private readonly Text[] _gearRows = new Text[8];
 
         private void Awake()
         {
@@ -32,6 +33,7 @@ namespace SurvivorIO
             BuildChars();
             BuildStages();
             BuildSettings();
+            BuildGear();
 
             ShowOnly(_main);
             Time.timeScale = 0f;     // freeze the run until Play
@@ -48,6 +50,7 @@ namespace SurvivorIO
             _chars.SetActive(false);
             _stages.SetActive(false);
             _settings.SetActive(false);
+            _gear.SetActive(false);
             Time.timeScale = 1f;
         }
 
@@ -58,6 +61,70 @@ namespace SurvivorIO
             if (_goldShop) _goldShop.text = g;
             if (_goldChars) _goldChars.text = g;
             if (_goldStages) _goldStages.text = g;
+            if (_goldGear) _goldGear.text = g;
+        }
+
+        private void BuildGear()
+        {
+            _gear = Panel("GearPanel", new Color(0.05f, 0.05f, 0.09f, 0.98f));
+            var t = Label(_gear.transform, "GEAR", 50, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 1f), new Vector2(0f, -90f), new Vector2(900f, 70f));
+            t.fontStyle = FontStyle.Bold; t.color = new Color(1f, 0.85f, 0.4f);
+
+            _goldGear = Label(_gear.transform, "", 30, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 1f), new Vector2(0f, -160f), new Vector2(700f, 44f));
+            _goldGear.color = new Color(1f, 0.85f, 0.3f);
+
+            float y = -220f;
+            for (int i = 0; i < GearSystem.SlotCount; i++)
+            {
+                int slot = i;
+                var row = RowButton(_gear.transform, y, new Color(0.15f, 0.15f, 0.2f), () => UpgradeSlot(slot));
+                row.rectTransform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(820f, 78f);
+                row.fontSize = 26;
+                _gearRows[i] = row;
+                y -= 90f;
+            }
+
+            Button(_gear.transform, "OPEN CHEST  (100g)", new Vector2(0f, 230f), new Vector2(520f, 95f), 36,
+                new Color(0.5f, 0.4f, 0.2f), OpenChest, bottom: true);
+            Button(_gear.transform, "BACK", new Vector2(0f, 120f), new Vector2(360f, 85f), 36,
+                new Color(0.3f, 0.3f, 0.35f), () => ShowOnly(_main), bottom: true);
+        }
+
+        private void OpenChest()
+        {
+            var item = GearSystem.RollChest();
+            if (item != null && AudioManager.Instance != null) AudioManager.Instance.PlayLevelUp();
+            RefreshGear();
+        }
+
+        private void UpgradeSlot(int slot)
+        {
+            var g = GearSystem.EquippedIn(slot);
+            if (g != null) GearSystem.Upgrade(g);
+            RefreshGear();
+        }
+
+        private void RefreshGear()
+        {
+            for (int i = 0; i < _gearRows.Length; i++)
+            {
+                var g = GearSystem.EquippedIn(i);
+                if (g == null)
+                {
+                    _gearRows[i].text = $"{GearSystem.SlotNames[i]}: <size=20>empty</size>";
+                    _gearRows[i].color = new Color(0.6f, 0.6f, 0.6f);
+                }
+                else
+                {
+                    string rar = GearSystem.RarityNames[g.rarity];
+                    _gearRows[i].text =
+                        $"{GearSystem.SlotNames[i]}: {rar} Lv{g.level}  <size=20>{GearSystem.StatLabel(g)}  ·  up {GearSystem.UpgradeCost(g)}g</size>";
+                    _gearRows[i].color = GearSystem.RarityColors[g.rarity];
+                }
+            }
+            RefreshGold();
         }
 
         private void BuyUpgrade(int id)
@@ -114,15 +181,17 @@ namespace SurvivorIO
                 new Vector2(0.5f, 1f), new Vector2(0f, -340f), new Vector2(700f, 60f));
             _goldMain.color = new Color(1f, 0.85f, 0.3f);
 
-            Button(_main.transform, "PLAY", new Vector2(0f, 150f), new Vector2(520f, 115f), 54,
+            Button(_main.transform, "PLAY", new Vector2(0f, 210f), new Vector2(520f, 110f), 52,
                 new Color(0.2f, 0.55f, 0.25f), Play);
-            Button(_main.transform, "STAGES", new Vector2(0f, 35f), new Vector2(520f, 95f), 38,
+            Button(_main.transform, "GEAR", new Vector2(0f, 105f), new Vector2(520f, 90f), 38,
+                new Color(0.45f, 0.38f, 0.2f), () => { ShowOnly(_gear); RefreshGear(); });
+            Button(_main.transform, "STAGES", new Vector2(0f, 5f), new Vector2(520f, 90f), 38,
                 new Color(0.3f, 0.4f, 0.3f), () => { ShowOnly(_stages); RefreshStages(); });
-            Button(_main.transform, "CHARACTERS", new Vector2(0f, -75f), new Vector2(520f, 95f), 38,
+            Button(_main.transform, "CHARACTERS", new Vector2(0f, -95f), new Vector2(520f, 90f), 38,
                 new Color(0.2f, 0.3f, 0.5f), () => { ShowOnly(_chars); RefreshChars(); });
-            Button(_main.transform, "SHOP", new Vector2(0f, -185f), new Vector2(520f, 95f), 38,
+            Button(_main.transform, "SHOP", new Vector2(0f, -195f), new Vector2(520f, 90f), 38,
                 new Color(0.45f, 0.3f, 0.5f), () => { ShowOnly(_shop); RefreshShop(); });
-            Button(_main.transform, "SETTINGS", new Vector2(0f, -295f), new Vector2(520f, 95f), 38,
+            Button(_main.transform, "SETTINGS", new Vector2(0f, -295f), new Vector2(520f, 90f), 38,
                 new Color(0.35f, 0.35f, 0.4f), () => { ShowOnly(_settings); RefreshSettings(); });
         }
 
@@ -177,6 +246,7 @@ namespace SurvivorIO
             _chars.SetActive(panel == _chars);
             _stages.SetActive(panel == _stages);
             _settings.SetActive(panel == _settings);
+            _gear.SetActive(panel == _gear);
         }
 
         private void BuildSettings()

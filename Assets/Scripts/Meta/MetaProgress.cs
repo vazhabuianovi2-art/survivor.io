@@ -14,6 +14,8 @@ namespace SurvivorIO
         public int charUnlockMask = 1;    // bit 0 = first character unlocked by default
         public int selectedStage;
         public int stageUnlockMask = 1;   // bit 0 = first stage unlocked by default
+        public System.Collections.Generic.List<GearItem> gearInventory;
+        public int[] gearEquipped;
     }
 
     /// <summary>
@@ -194,6 +196,9 @@ namespace SurvivorIO
                 if (Mathf.Abs(bonusHp) > 0.01f)
                     hp.SetMaxHealth(Mathf.Max(1f, hp.Max + bonusHp), refill: true);
             }
+
+            // Equipment bonuses on top.
+            GearSystem.ApplyTo(ps, hp);
         }
     }
 }
