@@ -72,11 +72,11 @@ namespace SurvivorIO
             if (spriteToFlip == null)
                 spriteToFlip = GetComponentInChildren<SpriteRenderer>();
 
-            // Apply stat multipliers
-            if (healthMultiplier != 1f)
-                _health.SetMaxHealth(_health.Max * healthMultiplier);
-            moveSpeed *= speedMultiplier;
-            contactDamage *= damageMultiplier;
+            // Apply stat multipliers (per-prefab × selected-stage difficulty)
+            float stage = GameManager.StageEnemyMult;
+            _health.SetMaxHealth(_health.Max * healthMultiplier * stage);
+            moveSpeed *= speedMultiplier * (1f + (stage - 1f) * 0.25f);  // milder speed scaling
+            contactDamage *= damageMultiplier * stage;
         }
 
         private void OnEnable()

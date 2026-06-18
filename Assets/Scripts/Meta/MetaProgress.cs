@@ -11,7 +11,9 @@ namespace SurvivorIO
         public int gold;
         public int[] upgradeLevels;
         public int selectedCharacter;
-        public int charUnlockMask = 1;   // bit 0 = first character unlocked by default
+        public int charUnlockMask = 1;    // bit 0 = first character unlocked by default
+        public int selectedStage;
+        public int stageUnlockMask = 1;   // bit 0 = first stage unlocked by default
     }
 
     /// <summary>
@@ -34,6 +36,14 @@ namespace SurvivorIO
             public int UnlockCost;
         }
 
+        public struct StageDef
+        {
+            public string Name, Desc;
+            public float Difficulty;   // enemy HP/damage multiplier
+            public Color Tint;         // background tint
+            public int UnlockCost;
+        }
+
         public static readonly UpgradeDef[] Upgrades =
         {
             new UpgradeDef { Name = "Might",  Desc = "+5% damage",        MaxLevel = 10, BaseCost = 50 },
@@ -49,6 +59,13 @@ namespace SurvivorIO
             new CharacterDef { Name = "Knight", Desc = "Sturdy all-rounder (+20 HP)",   DmgBonus = 0f,    HpBonus = 20f,  SpeedBonus = 0f,    UnlockCost = 0 },
             new CharacterDef { Name = "Rogue",  Desc = "Fast striker (+10% dmg/speed)", DmgBonus = 0.10f, HpBonus = 0f,   SpeedBonus = 0.10f, UnlockCost = 300 },
             new CharacterDef { Name = "Mage",   Desc = "Glass cannon (+20% dmg, -HP)",  DmgBonus = 0.20f, HpBonus = -10f, SpeedBonus = 0f,    UnlockCost = 500 },
+        };
+
+        public static readonly StageDef[] Stages =
+        {
+            new StageDef { Name = "Lava Fields", Desc = "The starting battleground",   Difficulty = 1f,   Tint = Color.white,                     UnlockCost = 0 },
+            new StageDef { Name = "Frostlands",  Desc = "Tougher foes (+50%)",          Difficulty = 1.5f, Tint = new Color(0.6f, 0.8f, 1f),       UnlockCost = 400 },
+            new StageDef { Name = "Inferno",     Desc = "Brutal (+120%)",               Difficulty = 2.2f, Tint = new Color(1f, 0.55f, 0.45f),     UnlockCost = 800 },
         };
 
         public static int UpgradeCount => Upgrades.Length;
@@ -131,6 +148,29 @@ namespace SurvivorIO
             if (Data.gold < cost) return false;
             Data.gold -= cost;
             Data.charUnlockMask |= (1 << idx);
+            Save();
+            return true;
+        }
+
+        // ---- stages ----
+        public static int SelectedStage => Mathf.Clamp(Data.selectedStage, 0, Stages.Length - 1);
+        public static bool IsStageUnlocked(int idx) => (Data.stageUnlockMask & (1 << idx)) != 0;
+
+        public static bool SelectStage(int idx)
+        {
+            if (!IsStageUnlocked(idx)) return false;
+            Data.selectedStage = idx;
+            Save();
+            return true;
+        }
+
+        public static bool UnlockStage(int idx)
+        {
+            if (IsStageUnlocked(idx)) return false;
+            int cost = Stages[idx].UnlockCost;
+            if (Data.gold < cost) return false;
+            Data.gold -= cost;
+            Data.stageUnlockMask |= (1 << idx);
             Save();
             return true;
         }

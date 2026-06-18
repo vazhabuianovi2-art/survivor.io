@@ -8,6 +8,9 @@ namespace SurvivorIO
     {
         public static GameManager Instance { get; private set; }
 
+        /// <summary>Enemy HP/damage multiplier from the selected stage (set by StageManager).</summary>
+        public static float StageEnemyMult = 1f;
+
         public float ElapsedTime { get; private set; }
         public bool IsGameOver { get; private set; }
         public bool IsGameWon { get; private set; }

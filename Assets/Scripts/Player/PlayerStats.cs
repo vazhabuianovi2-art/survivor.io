@@ -18,13 +18,26 @@ namespace SurvivorIO
         public float DamageTakenMult = 1f;  // scales contact damage to the player
 
         private Health _health;
+        private float _baseMaxHp;
 
         private void Awake()
         {
             Instance = this;
             _health = GetComponent<Health>();
+            _baseMaxHp = _health != null ? _health.Max : 0f;
 
-            // Apply persistent meta-progression (permanent upgrades + character).
+            ApplyMeta();
+        }
+
+        /// <summary>
+        /// Reset all multipliers to base and (re)apply persistent meta-progression.
+        /// Idempotent — safe to call again after the player changes upgrades/character
+        /// in the menu, just before a run starts.
+        /// </summary>
+        public void ApplyMeta()
+        {
+            DamageMult = CooldownMult = MoveSpeedMult = PickupRangeMult = XpMult = DamageTakenMult = 1f;
+            if (_health != null) _health.SetMaxHealth(Mathf.Max(1f, _baseMaxHp), refill: true);
             MetaProgress.ApplyTo(this, _health);
         }
 

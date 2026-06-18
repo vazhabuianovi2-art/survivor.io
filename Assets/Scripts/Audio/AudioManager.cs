@@ -28,9 +28,30 @@ namespace SurvivorIO
         private AudioClip _hit, _death, _levelUp, _hurt;
         private float _lastHit, _lastDeath;
 
+        public float SfxVolume => sfxVolume;
+        public float MusicVolume => musicVolume;
+
+        public void SetSfxVolume(float v)
+        {
+            sfxVolume = Mathf.Clamp01(v);
+            PlayerPrefs.SetFloat("sfxVol", sfxVolume);
+            PlayerPrefs.Save();
+        }
+
+        public void SetMusicVolume(float v)
+        {
+            musicVolume = Mathf.Clamp01(v);
+            if (_music != null) _music.volume = musicVolume;
+            PlayerPrefs.SetFloat("musVol", musicVolume);
+            PlayerPrefs.Save();
+        }
+
         private void Awake()
         {
             Instance = this;
+
+            sfxVolume   = PlayerPrefs.GetFloat("sfxVol", sfxVolume);
+            musicVolume = PlayerPrefs.GetFloat("musVol", musicVolume);
 
             _sfx = gameObject.AddComponent<AudioSource>();
             _sfx.playOnAwake = false;
