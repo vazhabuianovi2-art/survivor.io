@@ -44,6 +44,9 @@ namespace SurvivorIO
             new WeaponDef { Name = "Forcefield",   AcquireDesc = "A damaging aura surrounds you",            Type = typeof(ForcefieldWeapon) },
             new WeaponDef { Name = "Energy Laser", AcquireDesc = "Piercing beam through a line of enemies",  Type = typeof(EnergyLaserWeapon) },
             new WeaponDef { Name = "Drones",       AcquireDesc = "Companion drones that shoot for you",      Type = typeof(DroneWeapon) },
+            new WeaponDef { Name = "Lightning",    AcquireDesc = "Zaps several nearby enemies at once",      Type = typeof(LightningEmitterWeapon) },
+            new WeaponDef { Name = "Molotov",      AcquireDesc = "Leaves a burning zone on the ground",      Type = typeof(MolotovWeapon) },
+            new WeaponDef { Name = "Boomerang",    AcquireDesc = "Returning throw that hits twice",          Type = typeof(BoomerangWeapon) },
         };
 
         private struct EvolutionDef
