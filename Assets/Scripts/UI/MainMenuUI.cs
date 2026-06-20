@@ -16,7 +16,7 @@ namespace SurvivorIO
 
         private GameObject _main, _shop, _chars, _stages, _settings, _gear;
         private Text _goldMain, _goldShop, _goldChars, _goldStages, _goldGear;
-        private Text _sfxVal, _musVal;
+        private Text _sfxVal, _musVal, _stageCard;
         private readonly Text[] _shopRows = new Text[6];
         private readonly Text[] _charRows = new Text[3];
         private readonly Text[] _stageRows = new Text[3];
@@ -170,29 +170,111 @@ namespace SurvivorIO
 
         private void BuildMain()
         {
-            _main = Panel("MainMenuPanel", new Color(0.05f, 0.05f, 0.09f, 0.97f));
+            _main = Panel("MainMenuPanel", Color.white);
+            var bg = _main.GetComponent<Image>();
+            bg.sprite = GradientSprite();
+            bg.type = Image.Type.Simple;
+            bg.color = Color.white;
 
-            var title = Label(_main.transform, "SURVIVOR.IO", 84, TextAnchor.MiddleCenter,
-                new Vector2(0.5f, 1f), new Vector2(0f, -220f), new Vector2(900f, 120f));
+            // Top resource bar
+            var barBg = ChildImage(_main.transform, new Color(0f, 0f, 0f, 0.35f),
+                new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -6f), new Vector2(-20f, 80f));
+            _goldMain = Label(barBg.transform, "", 34, TextAnchor.MiddleRight,
+                new Vector2(1f, 0.5f), new Vector2(-30f, 0f), new Vector2(420f, 60f));
+            _goldMain.rectTransform.pivot = new Vector2(1f, 0.5f);
+            _goldMain.color = new Color(1f, 0.92f, 0.5f);
+
+            var title = Label(_main.transform, "SURVIVOR.IO", 64, TextAnchor.MiddleLeft,
+                new Vector2(0f, 1f), new Vector2(28f, -10f), new Vector2(560f, 70f));
+            title.rectTransform.pivot = new Vector2(0f, 1f);
             title.fontStyle = FontStyle.Bold;
-            title.color = new Color(1f, 0.85f, 0.2f);
+            title.color = new Color(1f, 0.9f, 0.45f);
 
-            _goldMain = Label(_main.transform, "", 34, TextAnchor.MiddleCenter,
-                new Vector2(0.5f, 1f), new Vector2(0f, -340f), new Vector2(700f, 60f));
-            _goldMain.color = new Color(1f, 0.85f, 0.3f);
+            // Central stage card
+            var card = ChildImage(_main.transform, new Color(0f, 0f, 0f, 0.4f),
+                new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                new Vector2(0f, 170f), new Vector2(680f, 420f));
+            _stageCard = Label(card.transform, "", 30, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(620f, 380f));
+            _stageCard.color = Color.white;
 
-            Button(_main.transform, "PLAY", new Vector2(0f, 210f), new Vector2(520f, 110f), 52,
-                new Color(0.2f, 0.55f, 0.25f), Play);
-            Button(_main.transform, "GEAR", new Vector2(0f, 105f), new Vector2(520f, 90f), 38,
-                new Color(0.45f, 0.38f, 0.2f), () => { ShowOnly(_gear); RefreshGear(); });
-            Button(_main.transform, "STAGES", new Vector2(0f, 5f), new Vector2(520f, 90f), 38,
-                new Color(0.3f, 0.4f, 0.3f), () => { ShowOnly(_stages); RefreshStages(); });
-            Button(_main.transform, "CHARACTERS", new Vector2(0f, -95f), new Vector2(520f, 90f), 38,
-                new Color(0.2f, 0.3f, 0.5f), () => { ShowOnly(_chars); RefreshChars(); });
-            Button(_main.transform, "SHOP", new Vector2(0f, -195f), new Vector2(520f, 90f), 38,
-                new Color(0.45f, 0.3f, 0.5f), () => { ShowOnly(_shop); RefreshShop(); });
-            Button(_main.transform, "SETTINGS", new Vector2(0f, -295f), new Vector2(520f, 90f), 38,
-                new Color(0.35f, 0.35f, 0.4f), () => { ShowOnly(_settings); RefreshSettings(); });
+            // Big START button
+            Button(_main.transform, "START", new Vector2(0f, -210f), new Vector2(560f, 150f), 64,
+                new Color(0.25f, 0.7f, 0.3f), Play);
+
+            // Bottom navigation row
+            BottomNav("GEAR",    -380f, new Color(0.5f, 0.42f, 0.2f),  () => { ShowOnly(_gear); RefreshGear(); });
+            BottomNav("SHOP",    -190f, new Color(0.5f, 0.32f, 0.55f), () => { ShowOnly(_shop); RefreshShop(); });
+            BottomNav("HEROES",   0f,   new Color(0.25f, 0.35f, 0.6f), () => { ShowOnly(_chars); RefreshChars(); });
+            BottomNav("STAGE",    190f, new Color(0.3f, 0.45f, 0.32f), () => { ShowOnly(_stages); RefreshStages(); });
+            BottomNav("OPTIONS",  380f, new Color(0.4f, 0.4f, 0.45f),  () => { ShowOnly(_settings); RefreshSettings(); });
+        }
+
+        private void BottomNav(string text, float x, Color color, UnityEngine.Events.UnityAction onClick)
+        {
+            var go = new GameObject("Nav_" + text, typeof(RectTransform));
+            go.transform.SetParent(_main.transform, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchoredPosition = new Vector2(x, 40f);
+            rt.sizeDelta = new Vector2(178f, 120f);
+            var img = go.AddComponent<Image>(); img.color = color;
+            var btn = go.AddComponent<Button>(); btn.targetGraphic = img;
+            btn.onClick.AddListener(onClick);
+            var label = Label(go.transform, text, 28, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(178f, 120f));
+            label.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            label.fontStyle = FontStyle.Bold;
+        }
+
+        private void RefreshMain()
+        {
+            if (_stageCard != null)
+            {
+                var s = MetaProgress.Stages[MetaProgress.SelectedStage];
+                var ch = MetaProgress.Characters[MetaProgress.SelectedCharacter];
+                _stageCard.text =
+                    $"<size=46><b>{MetaProgress.SelectedStage + 1}. {s.Name}</b></size>\n" +
+                    $"<size=24>{s.Desc}</size>\n\n" +
+                    $"<size=30>Hero:  {ch.Name}</size>\n" +
+                    $"<size=22>tap START to battle</size>";
+            }
+            RefreshGold();
+        }
+
+        private GameObject ChildImage(Transform parent, Color color, Vector2 aMin, Vector2 aMax,
+            Vector2 pivot, Vector2 pos, Vector2 size)
+        {
+            var go = new GameObject("Img", typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = aMin; rt.anchorMax = aMax; rt.pivot = pivot;
+            rt.anchoredPosition = pos; rt.sizeDelta = size;
+            go.AddComponent<Image>().color = color;
+            return go;
+        }
+
+        private static Sprite _gradient;
+        private static Sprite GradientSprite()
+        {
+            if (_gradient != null) return _gradient;
+            int h = 256;
+            var tex = new Texture2D(1, h, TextureFormat.RGBA32, false);
+            var top = new Color(0.16f, 0.08f, 0.26f);   // deep purple
+            var mid = new Color(0.42f, 0.16f, 0.45f);   // magenta
+            var bot = new Color(0.95f, 0.5f, 0.22f);    // warm orange
+            for (int y = 0; y < h; y++)
+            {
+                float t = y / (float)(h - 1);
+                Color c = t < 0.5f ? Color.Lerp(bot, mid, t * 2f) : Color.Lerp(mid, top, (t - 0.5f) * 2f);
+                tex.SetPixel(0, y, c);
+            }
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.Apply();
+            _gradient = Sprite.Create(tex, new Rect(0, 0, 1, h), new Vector2(0.5f, 0.5f), 100f);
+            return _gradient;
         }
 
         private void BuildShop()
@@ -247,6 +329,7 @@ namespace SurvivorIO
             _stages.SetActive(panel == _stages);
             _settings.SetActive(panel == _settings);
             _gear.SetActive(panel == _gear);
+            if (panel == _main) RefreshMain();
         }
 
         private void BuildSettings()

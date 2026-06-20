@@ -22,7 +22,7 @@ namespace SurvivorIO
 
         private void Update()
         {
-            if (!GameActive) return;
+            if (Owner == null || !GameActive) return;
             _t -= Time.deltaTime;
             if (_t > 0f) return;
 

@@ -67,6 +67,9 @@ namespace SurvivorIO
             new EvolutionDef { Base = typeof(OrbitOrbWeapon),    Passive = "Cooldown", Evolved = typeof(SaturnRingWeapon),   Name = "Saturn Ring",    Desc = "Orbs → a giant fast ring" },
             new EvolutionDef { Base = typeof(DroneWeapon),       Passive = "Power",    Evolved = typeof(DroneSwarmWeapon),   Name = "Drone Swarm",    Desc = "Drones → a fast-firing swarm" },
             new EvolutionDef { Base = typeof(ForcefieldWeapon),  Passive = "Vitality", Evolved = typeof(BlackHoleWeapon),    Name = "Black Hole",     Desc = "Forcefield → a pulling black hole" },
+            new EvolutionDef { Base = typeof(LightningEmitterWeapon), Passive = "Cooldown", Evolved = typeof(ThunderstormWeapon),  Name = "Thunderstorm",  Desc = "Lightning → zaps the whole screen" },
+            new EvolutionDef { Base = typeof(MolotovWeapon),     Passive = "Power",    Evolved = typeof(InfernoWeapon),      Name = "Inferno",        Desc = "Molotov → a raging inferno" },
+            new EvolutionDef { Base = typeof(BoomerangWeapon),   Passive = "Cooldown", Evolved = typeof(ChakramStormWeapon), Name = "Chakram Storm",  Desc = "Boomerang → a ring of chakrams" },
         };
 
         private PassiveManager _passives;

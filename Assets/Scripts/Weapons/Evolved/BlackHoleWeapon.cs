@@ -32,7 +32,7 @@ namespace SurvivorIO
 
         private void Update()
         {
-            if (!GameActive) return;
+            if (Owner == null || !GameActive) return;
 
             // Continuous pull every frame.
             Vector2 center = Owner.position;

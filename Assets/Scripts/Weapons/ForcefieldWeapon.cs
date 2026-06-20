@@ -47,7 +47,7 @@ namespace SurvivorIO
 
         private void Update()
         {
-            if (!GameActive) return;
+            if (Owner == null || !GameActive) return;
             _tick -= Time.deltaTime;
             if (_tick > 0f) return;
             _tick = TickInterval;
