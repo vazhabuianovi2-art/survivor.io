@@ -20,7 +20,13 @@ namespace SurvivorIO
         private readonly Text[] _shopRows = new Text[6];
         private readonly Text[] _charRows = new Text[3];
         private readonly Text[] _stageRows = new Text[3];
-        private readonly Text[] _gearRows = new Text[8];
+
+        // equipment screen
+        private readonly Image[] _slotImg = new Image[8];
+        private readonly Text[] _slotTxt = new Text[8];
+        private Transform _invGrid;
+        private Text _atkText, _hpText;
+        private static readonly string[] SlotAbbr = { "WPN", "ARM", "GLV", "BTS", "BLT", "NCK", "BRC", "RNG" };
 
         private void Awake()
         {
@@ -66,30 +72,75 @@ namespace SurvivorIO
 
         private void BuildGear()
         {
-            _gear = Panel("GearPanel", new Color(0.05f, 0.05f, 0.09f, 0.98f));
-            var t = Label(_gear.transform, "GEAR", 50, TextAnchor.MiddleCenter,
-                new Vector2(0.5f, 1f), new Vector2(0f, -90f), new Vector2(900f, 70f));
+            _gear = Panel("GearPanel", new Color(0.06f, 0.05f, 0.1f, 0.98f));
+            var t = Label(_gear.transform, "EQUIPMENT", 46, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 1f), new Vector2(0f, -60f), new Vector2(900f, 60f));
             t.fontStyle = FontStyle.Bold; t.color = new Color(1f, 0.85f, 0.4f);
 
-            _goldGear = Label(_gear.transform, "", 30, TextAnchor.MiddleCenter,
-                new Vector2(0.5f, 1f), new Vector2(0f, -160f), new Vector2(700f, 44f));
-            _goldGear.color = new Color(1f, 0.85f, 0.3f);
+            _goldGear = Label(_gear.transform, "", 28, TextAnchor.MiddleRight,
+                new Vector2(1f, 1f), new Vector2(-28f, -24f), new Vector2(360f, 44f));
+            _goldGear.rectTransform.pivot = new Vector2(1f, 1f);
+            _goldGear.color = new Color(1f, 0.9f, 0.5f);
 
-            float y = -220f;
-            for (int i = 0; i < GearSystem.SlotCount; i++)
+            // ATK / HP totals
+            _atkText = Label(_gear.transform, "", 30, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 1f), new Vector2(-150f, -130f), new Vector2(280f, 46f));
+            _atkText.fontStyle = FontStyle.Bold; _atkText.color = new Color(1f, 0.6f, 0.4f);
+            _hpText = Label(_gear.transform, "", 30, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 1f), new Vector2(150f, -130f), new Vector2(280f, 46f));
+            _hpText.fontStyle = FontStyle.Bold; _hpText.color = new Color(0.5f, 1f, 0.5f);
+
+            // Character portrait (center) with gear slots flanking it
+            var portrait = ChildImage(_gear.transform, new Color(0.2f, 0.15f, 0.32f, 0.6f),
+                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
+                new Vector2(0f, -190f), new Vector2(190f, 330f));
+            var pl = Label(portrait.transform, "HERO", 28, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(180f, 320f));
+            pl.color = new Color(0.9f, 0.9f, 1f);
+
+            float[] ys = { -180f, -290f, -400f, -510f };
+            for (int i = 0; i < 8; i++)
             {
-                int slot = i;
-                var row = RowButton(_gear.transform, y, new Color(0.15f, 0.15f, 0.2f), () => UpgradeSlot(slot));
-                row.rectTransform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(820f, 78f);
-                row.fontSize = 26;
-                _gearRows[i] = row;
-                y -= 90f;
+                float x = i < 4 ? -300f : 300f;
+                MakeSlot(i, x, ys[i % 4]);
             }
 
-            Button(_gear.transform, "OPEN CHEST  (100g)", new Vector2(0f, 230f), new Vector2(520f, 95f), 36,
-                new Color(0.5f, 0.4f, 0.2f), OpenChest, bottom: true);
-            Button(_gear.transform, "BACK", new Vector2(0f, 120f), new Vector2(360f, 85f), 36,
-                new Color(0.3f, 0.3f, 0.35f), () => ShowOnly(_main), bottom: true);
+            Label(_gear.transform, "My Equipment", 28, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 1f), new Vector2(0f, -580f), new Vector2(600f, 44f))
+                .color = new Color(1f, 0.92f, 0.7f);
+
+            var grid = new GameObject("InvGrid", typeof(RectTransform));
+            grid.transform.SetParent(_gear.transform, false);
+            var grt = grid.GetComponent<RectTransform>();
+            grt.anchorMin = grt.anchorMax = new Vector2(0.5f, 1f);
+            grt.pivot = new Vector2(0.5f, 1f);
+            grt.anchoredPosition = new Vector2(0f, -630f);
+            grt.sizeDelta = new Vector2(900f, 400f);
+            _invGrid = grid.transform;
+
+            ButtonTop(_gear.transform, "OPEN CHEST  (100g)", new Vector2(0f, -1010f), new Vector2(520f, 90f),
+                OpenChest, new Color(0.55f, 0.42f, 0.2f), 34);
+            ButtonTop(_gear.transform, "BACK", new Vector2(0f, -1110f), new Vector2(360f, 80f),
+                () => ShowOnly(_main), new Color(0.32f, 0.32f, 0.38f), 32);
+        }
+
+        private void MakeSlot(int slot, float x, float y)
+        {
+            var go = new GameObject("Slot" + slot, typeof(RectTransform));
+            go.transform.SetParent(_gear.transform, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+            rt.pivot = new Vector2(0.5f, 1f);
+            rt.anchoredPosition = new Vector2(x, y);
+            rt.sizeDelta = new Vector2(150f, 110f);
+            var img = go.AddComponent<Image>(); img.color = new Color(0.18f, 0.18f, 0.24f);
+            var btn = go.AddComponent<Button>(); btn.targetGraphic = img;
+            btn.onClick.AddListener(() => UpgradeSlot(slot));
+            var txt = Label(go.transform, "", 24, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(146f, 106f));
+            txt.fontStyle = FontStyle.Bold; txt.color = Color.white;
+            _slotImg[slot] = img;
+            _slotTxt[slot] = txt;
         }
 
         private void OpenChest()
@@ -108,22 +159,54 @@ namespace SurvivorIO
 
         private void RefreshGear()
         {
-            for (int i = 0; i < _gearRows.Length; i++)
+            // slots + totals
+            float dmgPct = 0f, hpFlat = 0f;
+            for (int i = 0; i < 8; i++)
             {
                 var g = GearSystem.EquippedIn(i);
                 if (g == null)
                 {
-                    _gearRows[i].text = $"{GearSystem.SlotNames[i]}: <size=20>empty</size>";
-                    _gearRows[i].color = new Color(0.6f, 0.6f, 0.6f);
+                    _slotImg[i].color = new Color(0.18f, 0.18f, 0.24f);
+                    _slotTxt[i].text = $"{SlotAbbr[i]}\n<size=18>empty</size>";
                 }
                 else
                 {
-                    string rar = GearSystem.RarityNames[g.rarity];
-                    _gearRows[i].text =
-                        $"{GearSystem.SlotNames[i]}: {rar} Lv{g.level}  <size=20>{GearSystem.StatLabel(g)}  ·  up {GearSystem.UpgradeCost(g)}g</size>";
-                    _gearRows[i].color = GearSystem.RarityColors[g.rarity];
+                    _slotImg[i].color = GearSystem.RarityColors[g.rarity];
+                    _slotTxt[i].text = $"{SlotAbbr[i]}\n<size=20>Lv{g.level}</size>\n<size=16>up {GearSystem.UpgradeCost(g)}g</size>";
+                    float v = GearSystem.StatValue(g);
+                    if (GearSystem.StatKind(g) == 0) dmgPct += v;
+                    else if (GearSystem.StatKind(g) == 1) hpFlat += v;
                 }
             }
+            _atkText.text = $"<size=22>ATK</size>  {Mathf.RoundToInt(100f * (1f + dmgPct))}";
+            _hpText.text = $"<size=22>HP</size>  {Mathf.RoundToInt(150f + hpFlat)}";
+
+            // inventory grid (tap to equip)
+            for (int c = _invGrid.childCount - 1; c >= 0; c--)
+                Destroy(_invGrid.GetChild(c).gameObject);
+
+            var inv = GearSystem.Inventory;
+            int max = Mathf.Min(inv.Count, 15);
+            for (int i = 0; i < max; i++)
+            {
+                int idx = i;
+                var g = inv[i];
+                int col = i % 5, row = i / 5;
+                var cell = new GameObject("Inv" + i, typeof(RectTransform));
+                cell.transform.SetParent(_invGrid, false);
+                var rt = cell.GetComponent<RectTransform>();
+                rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+                rt.pivot = new Vector2(0.5f, 1f);
+                rt.anchoredPosition = new Vector2(-340f + col * 170f, -row * 118f);
+                rt.sizeDelta = new Vector2(150f, 105f);
+                var img = cell.AddComponent<Image>(); img.color = GearSystem.RarityColors[g.rarity];
+                var btn = cell.AddComponent<Button>(); btn.targetGraphic = img;
+                btn.onClick.AddListener(() => { GearSystem.Equip(idx); RefreshGear(); });
+                var lbl = Label(cell.transform, $"{SlotAbbr[g.slot]}\n<size=18>Lv{g.level}</size>", 22,
+                    TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(146f, 101f));
+                lbl.fontStyle = FontStyle.Bold; lbl.color = Color.white;
+            }
+
             RefreshGold();
         }
 
@@ -365,7 +448,7 @@ namespace SurvivorIO
         }
 
         private void ButtonTop(Transform parent, string text, Vector2 pos, Vector2 size,
-            UnityEngine.Events.UnityAction onClick)
+            UnityEngine.Events.UnityAction onClick, Color? color = null, int fontSize = 44)
         {
             var go = new GameObject("Btn_" + text, typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -374,10 +457,10 @@ namespace SurvivorIO
             rt.pivot = new Vector2(0.5f, 1f);
             rt.anchoredPosition = pos;
             rt.sizeDelta = size;
-            var img = go.AddComponent<Image>(); img.color = new Color(0.3f, 0.3f, 0.35f);
+            var img = go.AddComponent<Image>(); img.color = color ?? new Color(0.3f, 0.3f, 0.35f);
             var btn = go.AddComponent<Button>(); btn.targetGraphic = img;
             btn.onClick.AddListener(onClick);
-            var label = Label(go.transform, text, 44, TextAnchor.MiddleCenter,
+            var label = Label(go.transform, text, fontSize, TextAnchor.MiddleCenter,
                 new Vector2(0.5f, 0.5f), Vector2.zero, size);
             label.rectTransform.pivot = new Vector2(0.5f, 0.5f);
             label.fontStyle = FontStyle.Bold;
