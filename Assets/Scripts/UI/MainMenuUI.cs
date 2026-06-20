@@ -26,6 +26,7 @@ namespace SurvivorIO
         private readonly Text[] _slotTxt = new Text[8];
         private Transform _invGrid;
         private Text _atkText, _hpText;
+        private RawImage _portraitRaw;
         private static readonly string[] SlotAbbr = { "WPN", "ARM", "GLV", "BTS", "BLT", "NCK", "BRC", "RNG" };
 
         private void Awake()
@@ -90,13 +91,16 @@ namespace SurvivorIO
                 new Vector2(0.5f, 1f), new Vector2(150f, -130f), new Vector2(280f, 46f));
             _hpText.fontStyle = FontStyle.Bold; _hpText.color = new Color(0.5f, 1f, 0.5f);
 
-            // Character portrait (center) with gear slots flanking it
-            var portrait = ChildImage(_gear.transform, new Color(0.2f, 0.15f, 0.32f, 0.6f),
-                new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-                new Vector2(0f, -190f), new Vector2(190f, 330f));
-            var pl = Label(portrait.transform, "HERO", 28, TextAnchor.MiddleCenter,
-                new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(180f, 320f));
-            pl.color = new Color(0.9f, 0.9f, 1f);
+            // Character portrait (center) — live render of the actual hero
+            var portrait = new GameObject("Portrait", typeof(RectTransform));
+            portrait.transform.SetParent(_gear.transform, false);
+            var prt = portrait.GetComponent<RectTransform>();
+            prt.anchorMin = prt.anchorMax = new Vector2(0.5f, 1f);
+            prt.pivot = new Vector2(0.5f, 1f);
+            prt.anchoredPosition = new Vector2(0f, -190f);
+            prt.sizeDelta = new Vector2(220f, 340f);
+            _portraitRaw = portrait.AddComponent<RawImage>();
+            _portraitRaw.color = Color.white;
 
             float[] ys = { -180f, -290f, -400f, -510f };
             for (int i = 0; i < 8; i++)
@@ -159,6 +163,10 @@ namespace SurvivorIO
 
         private void RefreshGear()
         {
+            // live hero portrait
+            if (_portraitRaw != null && HeroPortrait.Instance != null && HeroPortrait.Instance.Texture != null)
+                _portraitRaw.texture = HeroPortrait.Instance.Texture;
+
             // slots + totals
             float dmgPct = 0f, hpFlat = 0f;
             for (int i = 0; i < 8; i++)
@@ -413,6 +421,7 @@ namespace SurvivorIO
             _settings.SetActive(panel == _settings);
             _gear.SetActive(panel == _gear);
             if (panel == _main) RefreshMain();
+            if (HeroPortrait.Instance != null) HeroPortrait.Instance.SetRendering(panel == _gear);
         }
 
         private void BuildSettings()
